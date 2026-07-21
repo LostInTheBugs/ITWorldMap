@@ -1,10 +1,30 @@
 # 🌍 ITWorldMap
 
+[![GitHub tag](https://img.shields.io/github/v/tag/LostInTheBugs/ITWorldMap?label=version)](https://github.com/LostInTheBugs/ITWorldMap/tags)
+[![Deploy](https://github.com/LostInTheBugs/ITWorldMap/actions/workflows/deploy.yml/badge.svg)](https://github.com/LostInTheBugs/ITWorldMap/actions)
+
 Carte du monde interactive visualisant des indicateurs IT (IPv6, Internet, IA) croisés avec des données socio-économiques (population, PIB, CO₂).
 
 ## 🚀 Démo
 
-[https://lostinthebugs.github.io/ITWorldMap/](https://lostinthebugs.github.io/ITWorldMap/)
+- **GitHub Pages** : [lostinthebugs.github.io/ITWorldMap/](https://lostinthebugs.github.io/ITWorldMap/)
+- **Docker** : `http://localhost:3001` (après installation)
+
+## 📦 Installation rapide (Docker)
+
+```bash
+curl -sSL https://raw.githubusercontent.com/LostInTheBugs/ITWorldMap/main/install.sh | bash
+```
+
+Ou manuellement :
+
+```bash
+git clone https://github.com/LostInTheBugs/ITWorldMap.git /opt/itworldmap
+cd /opt/itworldmap
+PORT=3001 docker compose up -d --build
+```
+
+L'application sera accessible sur `http://localhost:3001`.
 
 ## 📊 Indicateurs
 
@@ -32,6 +52,33 @@ python3 scripts/fetch_worldbank.py   # Récupère les données World Bank
 python3 scripts/merge_data.py        # Fusionne → src/data/indicators.json
 ```
 
+## 🐳 Déploiement Docker
+
+```bash
+# Build + lancement
+PORT=3001 docker compose up -d --build
+
+# Logs
+docker logs itworldmap
+
+# Mise à jour
+cd /opt/itworldmap
+git pull origin main
+PORT=3001 docker compose up -d --build
+```
+
+## 🔖 Versioning
+
+| Changement | Version | Exemple |
+|---|---|---|
+| Nouvelle fonctionnalité | v1.x.0 | v1.0.0 → v1.1.0 |
+| Correction / amélioration | v1.0.x | v1.0.0 → v1.0.1 |
+| Refonte majeure | v2.0.0 | Sur décision |
+
+**Chaque release** :
+- Mettre à jour `<meta name="version" content="vX.Y.Z">` dans `index.html`
+- Créer un tag Git : `git tag -a vX.Y.Z -m "vX.Y.Z" && git push origin vX.Y.Z`
+
 ## 📁 Structure
 
 ```
@@ -47,9 +94,15 @@ ITWorldMap/
 │   └── main.tsx                 # Point d'entrée
 ├── data/
 │   ├── scripts/                 # Scripts ETL Python
+│   │   ├── fetch_worldbank.py   # API World Bank
+│   │   └── merge_data.py        # Fusion → src/data/
 │   ├── raw/                     # Données brutes (cachées)
 │   └── processed/               # Données normalisées
 ├── .github/workflows/deploy.yml # CI/CD GitHub Pages
+├── Dockerfile                   # Build multi-stage Node + Nginx
+├── docker-compose.yml           # Service Docker (port 3001)
+├── nginx.conf                   # Configuration Nginx (SPA fallback)
+├── install.sh                   # Script d'installation one-liner
 └── vite.config.ts
 ```
 
