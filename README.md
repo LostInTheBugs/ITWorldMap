@@ -5,6 +5,8 @@
 
 Carte du monde interactive visualisant des indicateurs IT (IPv6, Internet, IA) croisés avec des données socio-économiques (population, PIB, CO₂).
 
+🌐 **Démo** : [itworldmap.cloudfr.net](https://itworldmap.cloudfr.net/)
+
 ## 📦 Installation rapide (Docker)
 
 ```bash
