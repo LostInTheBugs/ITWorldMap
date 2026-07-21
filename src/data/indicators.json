@@ -1,18 +1,1598 @@
 [
-  {"iso3": "FRA", "population": 67935660, "gdp_per_capita": 40886, "co2_per_capita": 4.6, "internet_users_pct": 85.3, "ipv6_adoption_pct": 72.5},
-  {"iso3": "USA", "population": 334914895, "gdp_per_capita": 76330, "co2_per_capita": 14.7, "internet_users_pct": 91.8, "ipv6_adoption_pct": 56.2},
-  {"iso3": "DEU", "population": 83294633, "gdp_per_capita": 51204, "co2_per_capita": 8.1, "internet_users_pct": 89.5, "ipv6_adoption_pct": 68.3},
-  {"iso3": "JPN", "population": 125124989, "gdp_per_capita": 34017, "co2_per_capita": 8.6, "internet_users_pct": 92.5, "ipv6_adoption_pct": 48.7},
-  {"iso3": "IND", "population": 1428627663, "gdp_per_capita": 2411, "co2_per_capita": 1.8, "internet_users_pct": 46.3, "ipv6_adoption_pct": 78.9},
-  {"iso3": "CHN", "population": 1425671352, "gdp_per_capita": 12720, "co2_per_capita": 7.4, "internet_users_pct": 73.1, "ipv6_adoption_pct": 34.5},
-  {"iso3": "BRA", "population": 216422446, "gdp_per_capita": 8918, "co2_per_capita": 2.2, "internet_users_pct": 80.0, "ipv6_adoption_pct": 41.2},
-  {"iso3": "GBR", "population": 67736802, "gdp_per_capita": 46435, "co2_per_capita": 5.2, "internet_users_pct": 94.8, "ipv6_adoption_pct": 38.1},
-  {"iso3": "CAN", "population": 40097761, "gdp_per_capita": 54917, "co2_per_capita": 15.2, "internet_users_pct": 93.1, "ipv6_adoption_pct": 42.5},
-  {"iso3": "AUS", "population": 26439111, "gdp_per_capita": 64814, "co2_per_capita": 15.1, "internet_users_pct": 90.0, "ipv6_adoption_pct": 35.8},
-  {"iso3": "KOR", "population": 51784059, "gdp_per_capita": 34880, "co2_per_capita": 11.3, "internet_users_pct": 96.5, "ipv6_adoption_pct": 18.4},
-  {"iso3": "RUS", "population": 144236933, "gdp_per_capita": 13165, "co2_per_capita": 11.1, "internet_users_pct": 85.0, "ipv6_adoption_pct": 10.2},
-  {"iso3": "ZAF", "population": 60414495, "gdp_per_capita": 6766, "co2_per_capita": 7.3, "internet_users_pct": 68.2, "ipv6_adoption_pct": 6.8},
-  {"iso3": "NGA", "population": 223804632, "gdp_per_capita": 2221, "co2_per_capita": 0.6, "internet_users_pct": 36.5, "ipv6_adoption_pct": 15.3},
-  {"iso3": "MEX", "population": 128455567, "gdp_per_capita": 10287, "co2_per_capita": 3.6, "internet_users_pct": 72.0, "ipv6_adoption_pct": 45.1},
-  {"iso3": "IDN", "population": 277534122, "gdp_per_capita": 4788, "co2_per_capita": 2.3, "internet_users_pct": 62.0, "ipv6_adoption_pct": 22.7}
+  {
+    "iso3": "ABW",
+    "population": 108785,
+    "gdp_per_capita": 38590.5650288641,
+    "co2_per_capita": 5.14838649937497,
+    "internet_users_pct": 97.17
+  },
+  {
+    "iso3": "AFE",
+    "population": 788844284,
+    "gdp_per_capita": 1722.38561960923,
+    "co2_per_capita": 0.837679788408201,
+    "internet_users_pct": 30.4
+  },
+  {
+    "iso3": "AFG",
+    "population": 43844111,
+    "gdp_per_capita": 416.871146273728,
+    "co2_per_capita": 0.2829802981146,
+    "internet_users_pct": 16.09499931
+  },
+  {
+    "iso3": "AFW",
+    "population": 532809933,
+    "gdp_per_capita": 1600.05837434388,
+    "co2_per_capita": 0.503085151918467,
+    "internet_users_pct": 42.4
+  },
+  {
+    "iso3": "AGO",
+    "population": 39040039,
+    "gdp_per_capita": 3129.47662331063,
+    "co2_per_capita": 0.741712294740973,
+    "internet_users_pct": 40.70479965
+  },
+  {
+    "iso3": "ALB",
+    "population": 2349580,
+    "gdp_per_capita": 12998.147869552,
+    "co2_per_capita": 1.7852214941728,
+    "internet_users_pct": 85.86389923
+  },
+  {
+    "iso3": "ARE",
+    "population": 11513149,
+    "gdp_per_capita": 50273.5126243239,
+    "co2_per_capita": 18.2552064370494,
+    "internet_users_pct": 100
+  },
+  {
+    "iso3": "ARG",
+    "population": 45851378,
+    "gdp_per_capita": 14898.0885943842,
+    "co2_per_capita": 4.01066531653131,
+    "internet_users_pct": 89.66715228
+  },
+  {
+    "iso3": "ARM",
+    "population": 3086700,
+    "gdp_per_capita": 9474.01849300368,
+    "co2_per_capita": 2.47028185264546,
+    "internet_users_pct": 81.33930206
+  },
+  {
+    "iso3": "ASM",
+    "population": 46029,
+    "gdp_per_capita": 18017.4589383973,
+    "co2_per_capita": 0.0021383513311237,
+    "internet_users_pct": 0
+  },
+  {
+    "iso3": "ATG",
+    "population": 94209,
+    "gdp_per_capita": 24819.2454680158,
+    "co2_per_capita": 3.79857526767052,
+    "internet_users_pct": 72.73040009
+  },
+  {
+    "iso3": "AUS",
+    "population": 27614411,
+    "gdp_per_capita": 65129.7227990563,
+    "co2_per_capita": 14.0986639619808,
+    "internet_users_pct": 96.13140106
+  },
+  {
+    "iso3": "AUT",
+    "population": 9208163,
+    "gdp_per_capita": 62930.0351324599,
+    "co2_per_capita": 6.32278424603578,
+    "internet_users_pct": 91.92573373
+  },
+  {
+    "iso3": "AZE",
+    "population": 10246996,
+    "gdp_per_capita": 7410.72281660142,
+    "co2_per_capita": 3.81144251153847,
+    "internet_users_pct": 90.80000181
+  },
+  {
+    "iso3": "BDI",
+    "population": 14390003,
+    "gdp_per_capita": 233.823013385395,
+    "co2_per_capita": 0.0689574855425617,
+    "internet_users_pct": 8.595999718
+  },
+  {
+    "iso3": "BEL",
+    "population": 11941781,
+    "gdp_per_capita": 60750.2735864647,
+    "co2_per_capita": 7.30661519351762,
+    "internet_users_pct": 95.77579144
+  },
+  {
+    "iso3": "BEN",
+    "population": 14814460,
+    "gdp_per_capita": 1658.27312662991,
+    "co2_per_capita": 0.487328666439324,
+    "internet_users_pct": 33.98379898
+  },
+  {
+    "iso3": "BFA",
+    "population": 24074580,
+    "gdp_per_capita": 1147.57131635601,
+    "co2_per_capita": 0.274990879570369,
+    "internet_users_pct": 28.25270081
+  },
+  {
+    "iso3": "BGD",
+    "population": 175686899,
+    "gdp_per_capita": 2597.34352335275,
+    "co2_per_capita": 0.715539343541092,
+    "internet_users_pct": 53.42171316
+  },
+  {
+    "iso3": "BGR",
+    "population": 6433302,
+    "gdp_per_capita": 20328.1667065538,
+    "co2_per_capita": 5.30760215797104,
+    "internet_users_pct": 82.438955
+  },
+  {
+    "iso3": "BHR",
+    "population": 1600366,
+    "gdp_per_capita": 30596.5794898885,
+    "co2_per_capita": 23.8999918170545,
+    "internet_users_pct": 100
+  },
+  {
+    "iso3": "BHS",
+    "population": 403033,
+    "gdp_per_capita": 39455.4466548546,
+    "co2_per_capita": 3.63633645083395,
+    "internet_users_pct": 92.47270203
+  },
+  {
+    "iso3": "BIH",
+    "population": 3140095,
+    "gdp_per_capita": 10381.8460703874,
+    "co2_per_capita": 6.44935787372249,
+    "internet_users_pct": 86.10091103
+  },
+  {
+    "iso3": "BLR",
+    "population": 9085991,
+    "gdp_per_capita": 10279.2547190723,
+    "co2_per_capita": 5.93649429972465,
+    "internet_users_pct": 94.26182128
+  },
+  {
+    "iso3": "BLZ",
+    "population": 422924,
+    "gdp_per_capita": 7865.47937690933,
+    "co2_per_capita": 0.932452909809338,
+    "internet_users_pct": 80.00582262
+  },
+  {
+    "iso3": "BMU",
+    "population": 64555,
+    "gdp_per_capita": 142250.433195123,
+    "co2_per_capita": 4.1354663036079,
+    "internet_users_pct": 98.37
+  },
+  {
+    "iso3": "BOL",
+    "population": 12581843,
+    "gdp_per_capita": 5147.81081955367,
+    "co2_per_capita": 2.29073378062186,
+    "internet_users_pct": 79.70469666
+  },
+  {
+    "iso3": "BRA",
+    "population": 212812405,
+    "gdp_per_capita": 10713.2856869511,
+    "co2_per_capita": 2.31826466114939,
+    "internet_users_pct": 84.46347227
+  },
+  {
+    "iso3": "BRB",
+    "population": 282623,
+    "gdp_per_capita": 28364.8181499736,
+    "co2_per_capita": 2.52348061897496,
+    "internet_users_pct": 70.36470032
+  },
+  {
+    "iso3": "BRN",
+    "population": 466330,
+    "gdp_per_capita": 32234.6428368582,
+    "co2_per_capita": 20.2426516194424,
+    "internet_users_pct": 96.29828801
+  },
+  {
+    "iso3": "BTN",
+    "population": 796682,
+    "gdp_per_capita": 4492.78400306618,
+    "co2_per_capita": 2.01118348906666,
+    "internet_users_pct": 91.27739716
+  },
+  {
+    "iso3": "BWA",
+    "population": 2562122,
+    "gdp_per_capita": 7778.1151090571,
+    "co2_per_capita": 2.73749285541178,
+    "internet_users_pct": 57.45950036
+  },
+  {
+    "iso3": "CAF",
+    "population": 5513282,
+    "gdp_per_capita": 556.131398031455,
+    "co2_per_capita": 0.0632938700243308,
+    "internet_users_pct": 13.78250027
+  },
+  {
+    "iso3": "CAN",
+    "population": 41651653,
+    "gdp_per_capita": 55697.6639660837,
+    "co2_per_capita": 14.0072704088031,
+    "internet_users_pct": 94.353302
+  },
+  {
+    "iso3": "CHE",
+    "population": 9092436,
+    "gdp_per_capita": 114769.012314293,
+    "co2_per_capita": 3.74568795220564,
+    "internet_users_pct": 97.32103855
+  },
+  {
+    "iso3": "CHL",
+    "population": 19859921,
+    "gdp_per_capita": 17994.5911957485,
+    "co2_per_capita": 3.93744000373189,
+    "internet_users_pct": 95.590243
+  },
+  {
+    "iso3": "CHN",
+    "population": 1406585000,
+    "gdp_per_capita": 13861.970224368,
+    "co2_per_capita": 9.31508933799393,
+    "internet_users_pct": 91.6
+  },
+  {
+    "iso3": "CIV",
+    "population": 32711547,
+    "gdp_per_capita": 3050.10202257321,
+    "co2_per_capita": 0.589054440955677,
+    "internet_users_pct": 41.43219902
+  },
+  {
+    "iso3": "CMR",
+    "population": 29879337,
+    "gdp_per_capita": 1972.3815800786,
+    "co2_per_capita": 0.353419532873246,
+    "internet_users_pct": 46.25880051
+  },
+  {
+    "iso3": "COD",
+    "population": 112832473,
+    "gdp_per_capita": 806.776000708534,
+    "co2_per_capita": 0.0568247825820182,
+    "internet_users_pct": 19.67350006
+  },
+  {
+    "iso3": "COG",
+    "population": 6484437,
+    "gdp_per_capita": 2514.73393584747,
+    "co2_per_capita": 1.33536271579755,
+    "internet_users_pct": 47.25159836
+  },
+  {
+    "iso3": "COL",
+    "population": 53425635,
+    "gdp_per_capita": 8561.62091854449,
+    "co2_per_capita": 1.79780371737796,
+    "internet_users_pct": 79.34543299
+  },
+  {
+    "iso3": "COM",
+    "population": 882847,
+    "gdp_per_capita": 2055.75921566281,
+    "co2_per_capita": 0.514984514693732,
+    "internet_users_pct": 32.51750183
+  },
+  {
+    "iso3": "CPV",
+    "population": 527326,
+    "gdp_per_capita": 5796.47207860911,
+    "co2_per_capita": 1.28830183071462,
+    "internet_users_pct": 74.73519897
+  },
+  {
+    "iso3": "CRI",
+    "population": 5152950,
+    "gdp_per_capita": 19970.0989059622,
+    "co2_per_capita": 1.63283566378358,
+    "internet_users_pct": 87.17019653
+  },
+  {
+    "iso3": "CUB",
+    "population": 10937203,
+    "gdp_per_capita": 9605.27914559614,
+    "co2_per_capita": 1.9129886264601,
+    "internet_users_pct": 70.47699738
+  },
+  {
+    "iso3": "CYM",
+    "population": 75844,
+    "gdp_per_capita": 104292.900672109,
+    "co2_per_capita": 4.99617228736049,
+    "internet_users_pct": 81.0676932508161
+  },
+  {
+    "iso3": "CYP",
+    "population": 1370754,
+    "gdp_per_capita": 41783.08984375,
+    "co2_per_capita": 5.40469504859816,
+    "internet_users_pct": 89.60099246
+  },
+  {
+    "iso3": "CZE",
+    "population": 10886878,
+    "gdp_per_capita": 35917.2724081665,
+    "co2_per_capita": 7.12966532502255,
+    "internet_users_pct": 87.68776014
+  },
+  {
+    "iso3": "DEU",
+    "population": 83491249,
+    "gdp_per_capita": 60496.4350820414,
+    "co2_per_capita": 6.94395663386317,
+    "internet_users_pct": 93.49999579
+  },
+  {
+    "iso3": "DJI",
+    "population": 1184076,
+    "gdp_per_capita": 3905.604954681,
+    "co2_per_capita": 0.765537056716653,
+    "internet_users_pct": 65.29889679
+  },
+  {
+    "iso3": "DMA",
+    "population": 65871,
+    "gdp_per_capita": 10989.0431185083,
+    "co2_per_capita": 1.27331772524734,
+    "internet_users_pct": 82.04689789
+  },
+  {
+    "iso3": "DNK",
+    "population": 6009169,
+    "gdp_per_capita": 76970.1535217919,
+    "co2_per_capita": 4.2782054919933,
+    "internet_users_pct": 99.76915157
+  },
+  {
+    "iso3": "DOM",
+    "population": 11520487,
+    "gdp_per_capita": 11059.2081531834,
+    "co2_per_capita": 2.99473457012728,
+    "internet_users_pct": 91.0022446
+  },
+  {
+    "iso3": "DZA",
+    "population": 47435312,
+    "gdp_per_capita": 6051.00322704182,
+    "co2_per_capita": 3.98080005796518,
+    "internet_users_pct": 77.4178009
+  },
+  {
+    "iso3": "EAP",
+    "population": 2143908411,
+    "gdp_per_capita": 10843.4363994141,
+    "co2_per_capita": 7.14637561812689,
+    "internet_users_pct": 88.1
+  },
+  {
+    "iso3": "EAS",
+    "population": 2390873921,
+    "gdp_per_capita": 14077.2712026283,
+    "co2_per_capita": 7.35284100773285,
+    "internet_users_pct": 88.4
+  },
+  {
+    "iso3": "ECA",
+    "population": 253280471,
+    "gdp_per_capita": 11117.61379372,
+    "co2_per_capita": 5.14090335677955,
+    "internet_users_pct": 87.5
+  },
+  {
+    "iso3": "ECS",
+    "population": 932525035,
+    "gdp_per_capita": 34603.480892464,
+    "co2_per_capita": 6.61623076737496,
+    "internet_users_pct": 92.4
+  },
+  {
+    "iso3": "ECU",
+    "population": 18289896,
+    "gdp_per_capita": 7125.27618527738,
+    "co2_per_capita": 2.64474970000791,
+    "internet_users_pct": 77.17273115
+  },
+  {
+    "iso3": "EGY",
+    "population": 118365995,
+    "gdp_per_capita": 3085.80712036204,
+    "co2_per_capita": 2.50251380967098,
+    "internet_users_pct": 74.64839935
+  },
+  {
+    "iso3": "ERI",
+    "population": 3607003,
+    "gdp_per_capita": 688.68165957684,
+    "co2_per_capita": 0.220047329974547,
+    "internet_users_pct": 14.34939957
+  },
+  {
+    "iso3": "ESP",
+    "population": 49355143,
+    "gdp_per_capita": 38627.2472148623,
+    "co2_per_capita": 4.50540688376633,
+    "internet_users_pct": 95.7574516
+  },
+  {
+    "iso3": "EST",
+    "population": 1366475,
+    "gdp_per_capita": 34417.6320815138,
+    "co2_per_capita": 7.75936884491537,
+    "internet_users_pct": 92.23796204
+  },
+  {
+    "iso3": "ETH",
+    "population": 135472051,
+    "gdp_per_capita": 932.729352775179,
+    "co2_per_capita": 0.146636636122491,
+    "internet_users_pct": 21.94129944
+  },
+  {
+    "iso3": "FIN",
+    "population": 5646436,
+    "gdp_per_capita": 56148.580949046,
+    "co2_per_capita": 5.53521221243539,
+    "internet_users_pct": 93.72405196
+  },
+  {
+    "iso3": "FJI",
+    "population": 933154,
+    "gdp_per_capita": 6642.00449450523,
+    "co2_per_capita": 1.62222863442953,
+    "internet_users_pct": 74.7052002
+  },
+  {
+    "iso3": "FRA",
+    "population": 68720337,
+    "gdp_per_capita": 48985.7307807924,
+    "co2_per_capita": 4.00355772602595,
+    "internet_users_pct": 88.65381638
+  },
+  {
+    "iso3": "FRO",
+    "population": 54900,
+    "gdp_per_capita": 74175.2776311377,
+    "co2_per_capita": 0.0384333821376281,
+    "internet_users_pct": 97.5819589384468
+  },
+  {
+    "iso3": "FSM",
+    "population": 113683,
+    "gdp_per_capita": 4414.00737137479,
+    "co2_per_capita": 0.00176740897843761,
+    "internet_users_pct": 39.52360153
+  },
+  {
+    "iso3": "GAB",
+    "population": 2593130,
+    "gdp_per_capita": 8263.03321595,
+    "co2_per_capita": 2.0474983378969,
+    "internet_users_pct": 68.72090149
+  },
+  {
+    "iso3": "GBR",
+    "population": 69487000,
+    "gdp_per_capita": 57601.9621201954,
+    "co2_per_capita": 4.22077337220883,
+    "internet_users_pct": 95.4720993
+  },
+  {
+    "iso3": "GEO",
+    "population": 3935766,
+    "gdp_per_capita": 9691.53472415196,
+    "co2_per_capita": 3.53241610924853,
+    "internet_users_pct": 83.79855689
+  },
+  {
+    "iso3": "GHA",
+    "population": 35064272,
+    "gdp_per_capita": 3257.1588903576,
+    "co2_per_capita": 0.702085843566409,
+    "internet_users_pct": 72.17569733
+  },
+  {
+    "iso3": "GIN",
+    "population": 15099727,
+    "gdp_per_capita": 1877.2541220972,
+    "co2_per_capita": 0.352794025802477,
+    "internet_users_pct": 33.30469894
+  },
+  {
+    "iso3": "GMB",
+    "population": 2822093,
+    "gdp_per_capita": 919.060423427951,
+    "co2_per_capita": 0.178370340740612,
+    "internet_users_pct": 49.49430084
+  },
+  {
+    "iso3": "GNB",
+    "population": 2249515,
+    "gdp_per_capita": 1123.76679992349,
+    "co2_per_capita": 0.155449923501557,
+    "internet_users_pct": 29.77739906
+  },
+  {
+    "iso3": "GNQ",
+    "population": 1938431,
+    "gdp_per_capita": 6615.25245207167,
+    "co2_per_capita": 2.55052004844345,
+    "internet_users_pct": 63.29930115
+  },
+  {
+    "iso3": "GRC",
+    "population": 10413962,
+    "gdp_per_capita": 26948.0070432791,
+    "co2_per_capita": 5.04642227577271,
+    "internet_users_pct": 86.26968886
+  },
+  {
+    "iso3": "GRD",
+    "population": 117303,
+    "gdp_per_capita": 12106.8790105068,
+    "co2_per_capita": 1.50076360626925,
+    "internet_users_pct": 70.16159821
+  },
+  {
+    "iso3": "GRL",
+    "population": 56831,
+    "gdp_per_capita": 58498.9707973609,
+    "co2_per_capita": 10.4528819762123,
+    "internet_users_pct": 69.4824617821988
+  },
+  {
+    "iso3": "GTM",
+    "population": 18687881,
+    "gdp_per_capita": 6598.18032988711,
+    "co2_per_capita": 1.1066501528086,
+    "internet_users_pct": 60.22140121
+  },
+  {
+    "iso3": "GUM",
+    "population": 168999,
+    "gdp_per_capita": 41833.1517132825,
+    "co2_per_capita": 0.00178808775934723,
+    "internet_users_pct": 80.5054655600831
+  },
+  {
+    "iso3": "GUY",
+    "population": 835986,
+    "gdp_per_capita": 32413.7930757518,
+    "co2_per_capita": 4.55860818422139,
+    "internet_users_pct": 83.00080109
+  },
+  {
+    "iso3": "HKG",
+    "population": 7498900,
+    "gdp_per_capita": 56983.0663059906,
+    "co2_per_capita": 4.60070971943488,
+    "internet_users_pct": 95.75536971
+  },
+  {
+    "iso3": "HND",
+    "population": 11005850,
+    "gdp_per_capita": 3598.21450440452,
+    "co2_per_capita": 1.13551979026212,
+    "internet_users_pct": 58.62269974
+  },
+  {
+    "iso3": "HRV",
+    "population": 3876200,
+    "gdp_per_capita": 27103.9116109268,
+    "co2_per_capita": 4.83151414825927,
+    "internet_users_pct": 83.63240029
+  },
+  {
+    "iso3": "HTI",
+    "population": 11906095,
+    "gdp_per_capita": 2694.18969101404,
+    "co2_per_capita": 0.298473814991934,
+    "internet_users_pct": 47.8614006
+  },
+  {
+    "iso3": "HUN",
+    "population": 9514251,
+    "gdp_per_capita": 25907.4743259406,
+    "co2_per_capita": 4.45791782423566,
+    "internet_users_pct": 93.77898628
+  },
+  {
+    "iso3": "IBD",
+    "population": 5006926951,
+    "gdp_per_capita": 8599.35834895508,
+    "co2_per_capita": 5.174696773473,
+    "internet_users_pct": 82.7
+  },
+  {
+    "iso3": "IBT",
+    "population": 6993790788,
+    "gdp_per_capita": 6613.2094697403,
+    "co2_per_capita": 3.88766822076006,
+    "internet_users_pct": 70.3
+  },
+  {
+    "iso3": "IDA",
+    "population": 1986863837,
+    "gdp_per_capita": 1608.08422318374,
+    "co2_per_capita": 0.575459119201334,
+    "internet_users_pct": 38.9
+  },
+  {
+    "iso3": "IDB",
+    "population": 689783382,
+    "gdp_per_capita": 1841.20446420685,
+    "co2_per_capita": 0.841413342708494,
+    "internet_users_pct": 44.2
+  },
+  {
+    "iso3": "IDN",
+    "population": 285721236,
+    "gdp_per_capita": 5059.62596411213,
+    "co2_per_capita": 2.86503978188758,
+    "internet_users_pct": 72.78075544
+  },
+  {
+    "iso3": "IDX",
+    "population": 1297080455,
+    "gdp_per_capita": 1484.11159862857,
+    "co2_per_capita": 0.432023607013772,
+    "internet_users_pct": 36.1
+  },
+  {
+    "iso3": "IND",
+    "population": 1463865525,
+    "gdp_per_capita": 2702.47987141553,
+    "co2_per_capita": 2.17365173535787,
+    "internet_users_pct": 70
+  },
+  {
+    "iso3": "IRL",
+    "population": 5484367,
+    "gdp_per_capita": 131592.462547877,
+    "co2_per_capita": 6.03605774131313,
+    "internet_users_pct": 97.18769836
+  },
+  {
+    "iso3": "IRN",
+    "population": 92417681,
+    "gdp_per_capita": 3924.38017821898,
+    "co2_per_capita": 9.05329342087712,
+    "internet_users_pct": 85.3404007
+  },
+  {
+    "iso3": "IRQ",
+    "population": 47020774,
+    "gdp_per_capita": 5409.67899716967,
+    "co2_per_capita": 5.18375227496016,
+    "internet_users_pct": 81.47450256
+  },
+  {
+    "iso3": "ISL",
+    "population": 392404,
+    "gdp_per_capita": 98323.4849517418,
+    "co2_per_capita": 8.5199194837855,
+    "internet_users_pct": 98.209198
+  },
+  {
+    "iso3": "ISR",
+    "population": 10122800,
+    "gdp_per_capita": 60336.8477964194,
+    "co2_per_capita": 5.76527164023915,
+    "internet_users_pct": 88.18242225
+  },
+  {
+    "iso3": "ITA",
+    "population": 58915656,
+    "gdp_per_capita": 43308.6403060733,
+    "co2_per_capita": 5.07573834102673,
+    "internet_users_pct": 89.2207202
+  },
+  {
+    "iso3": "JAM",
+    "population": 2837077,
+    "gdp_per_capita": 8002.92104076242,
+    "co2_per_capita": 2.84378384565939,
+    "internet_users_pct": 90.10870361
+  },
+  {
+    "iso3": "JOR",
+    "population": 11520684,
+    "gdp_per_capita": 5347.77731384797,
+    "co2_per_capita": 2.0898692239058,
+    "internet_users_pct": 95.62244985
+  },
+  {
+    "iso3": "JPN",
+    "population": 123366734,
+    "gdp_per_capita": 35951.0449549304,
+    "co2_per_capita": 7.84242057238933,
+    "internet_users_pct": 85.54153081
+  },
+  {
+    "iso3": "KAZ",
+    "population": 20843754,
+    "gdp_per_capita": 14692.1331757237,
+    "co2_per_capita": 12.5678187536661,
+    "internet_users_pct": 93.39167254
+  },
+  {
+    "iso3": "KEN",
+    "population": 57532493,
+    "gdp_per_capita": 2362.86091198611,
+    "co2_per_capita": 0.38344092060836,
+    "internet_users_pct": 34.97622513
+  },
+  {
+    "iso3": "KGZ",
+    "population": 7343064,
+    "gdp_per_capita": 3080.96893823359,
+    "co2_per_capita": 1.48784220370685,
+    "internet_users_pct": 92.0286026
+  },
+  {
+    "iso3": "KHM",
+    "population": 17847982,
+    "gdp_per_capita": 2872.42926639909,
+    "co2_per_capita": 1.10207037315065,
+    "internet_users_pct": 68.47530365
+  },
+  {
+    "iso3": "KIR",
+    "population": 136488,
+    "gdp_per_capita": 2558.66636011102,
+    "co2_per_capita": 0.592485763986976,
+    "internet_users_pct": 89.44029999
+  },
+  {
+    "iso3": "KNA",
+    "population": 46922,
+    "gdp_per_capita": 25223.0257622185,
+    "co2_per_capita": 2.88410221377794,
+    "internet_users_pct": 76.88400269
+  },
+  {
+    "iso3": "KOR",
+    "population": 51684564,
+    "gdp_per_capita": 36226.9663637512,
+    "co2_per_capita": 11.3622569893006,
+    "internet_users_pct": 97.89563777
+  },
+  {
+    "iso3": "KWT",
+    "population": 4865298,
+    "gdp_per_capita": 32312.3119953634,
+    "co2_per_capita": 23.6726718577295,
+    "internet_users_pct": 100
+  },
+  {
+    "iso3": "LAC",
+    "population": 626808315,
+    "gdp_per_capita": 10407.4817975955,
+    "co2_per_capita": 2.59304670790239,
+    "internet_users_pct": 83.6
+  },
+  {
+    "iso3": "LAO",
+    "population": 7873046,
+    "gdp_per_capita": 2324.76353098791,
+    "co2_per_capita": 3.35435098295083,
+    "internet_users_pct": 65.59269714
+  },
+  {
+    "iso3": "LBN",
+    "population": 5849421,
+    "gdp_per_capita": 4473.27134441128,
+    "co2_per_capita": 1.89531037233795,
+    "internet_users_pct": 80.63400269
+  },
+  {
+    "iso3": "LBR",
+    "population": 5731206,
+    "gdp_per_capita": 915.328972645548,
+    "co2_per_capita": 0.154485706553412,
+    "internet_users_pct": 32.23360062
+  },
+  {
+    "iso3": "LBY",
+    "population": 7458555,
+    "gdp_per_capita": 6448.82415074121,
+    "co2_per_capita": 8.66457129316627,
+    "internet_users_pct": 81.95449829
+  },
+  {
+    "iso3": "LCA",
+    "population": 180149,
+    "gdp_per_capita": 14745.8184305461,
+    "co2_per_capita": 1.71076642335766,
+    "internet_users_pct": 68.20500183
+  },
+  {
+    "iso3": "LCN",
+    "population": 666592570,
+    "gdp_per_capita": 11095.2176548294,
+    "co2_per_capita": 2.67617567587541,
+    "internet_users_pct": 83.7
+  },
+  {
+    "iso3": "LDC",
+    "population": 1214167506,
+    "gdp_per_capita": 1361.99182021439,
+    "co2_per_capita": 0.379115119323131,
+    "internet_users_pct": 33.7
+  },
+  {
+    "iso3": "LKA",
+    "population": 21756000,
+    "gdp_per_capita": 5002.07904353724,
+    "co2_per_capita": 1.06473352801606,
+    "internet_users_pct": 54.59
+  },
+  {
+    "iso3": "LSO",
+    "population": 2363325,
+    "gdp_per_capita": 1088.96276223185,
+    "co2_per_capita": 0.428078272524913,
+    "internet_users_pct": 51.79660034
+  },
+  {
+    "iso3": "LTU",
+    "population": 2888774,
+    "gdp_per_capita": 32958.6706396386,
+    "co2_per_capita": 4.49056496639174,
+    "internet_users_pct": 89.16116293
+  },
+  {
+    "iso3": "LUX",
+    "population": 686970,
+    "gdp_per_capita": 147252.179121515,
+    "co2_per_capita": 10.5572722492364,
+    "internet_users_pct": 99.12902211
+  },
+  {
+    "iso3": "LVA",
+    "population": 1847785,
+    "gdp_per_capita": 26311.9730706362,
+    "co2_per_capita": 3.647774745944,
+    "internet_users_pct": 92.70757011
+  },
+  {
+    "iso3": "MAC",
+    "population": 685900,
+    "gdp_per_capita": 75901.7461294198,
+    "co2_per_capita": 2.52532751091703,
+    "internet_users_pct": 89.82640076
+  },
+  {
+    "iso3": "MAR",
+    "population": 38430770,
+    "gdp_per_capita": 4672.46826171875,
+    "co2_per_capita": 1.83925269318779,
+    "internet_users_pct": 91.2
+  },
+  {
+    "iso3": "MDA",
+    "population": 2360527,
+    "gdp_per_capita": 8621.71721623786,
+    "co2_per_capita": 3.41675873098598,
+    "internet_users_pct": 77.3687973
+  },
+  {
+    "iso3": "MDG",
+    "population": 32740678,
+    "gdp_per_capita": 599.265294255357,
+    "co2_per_capita": 0.146494805123461,
+    "internet_users_pct": 18.67790031
+  },
+  {
+    "iso3": "MDV",
+    "population": 529676,
+    "gdp_per_capita": 14614.7208116541,
+    "co2_per_capita": 3.56650922036609,
+    "internet_users_pct": 85.23999786
+  },
+  {
+    "iso3": "MEA",
+    "population": 828025185,
+    "gdp_per_capita": 6202.19002141299,
+    "co2_per_capita": 4.09239431844529,
+    "internet_users_pct": 63.7
+  },
+  {
+    "iso3": "MEX",
+    "population": 131946900,
+    "gdp_per_capita": 13889.2339628708,
+    "co2_per_capita": 3.63738680384754,
+    "internet_users_pct": 83.12233799
+  },
+  {
+    "iso3": "MHL",
+    "population": 36282,
+    "gdp_per_capita": 8489.05793506422,
+    "co2_per_capita": 0.00266325769681474,
+    "internet_users_pct": 65.915802
+  },
+  {
+    "iso3": "MKD",
+    "population": 1820909,
+    "gdp_per_capita": 10489.9255355525,
+    "co2_per_capita": 3.99992545326879,
+    "internet_users_pct": 93.1
+  },
+  {
+    "iso3": "MLI",
+    "population": 25198821,
+    "gdp_per_capita": 1193.27601004701,
+    "co2_per_capita": 0.302799241541437,
+    "internet_users_pct": 36.80149841
+  },
+  {
+    "iso3": "MLT",
+    "population": 579704,
+    "gdp_per_capita": 47906.9000057635,
+    "co2_per_capita": 3.17888641409729,
+    "internet_users_pct": 93.86029816
+  },
+  {
+    "iso3": "MMR",
+    "population": 54850648,
+    "gdp_per_capita": 1488.87527836542,
+    "co2_per_capita": 0.575463259318228,
+    "internet_users_pct": 45.4477005
+  },
+  {
+    "iso3": "MNA",
+    "population": 753903407,
+    "gdp_per_capita": 2829.12883889291,
+    "co2_per_capita": 2.72400325211606,
+    "internet_users_pct": 0
+  },
+  {
+    "iso3": "MNG",
+    "population": 3568978,
+    "gdp_per_capita": 7108.22743246244,
+    "co2_per_capita": 7.84665630954259,
+    "internet_users_pct": 85.12349701
+  },
+  {
+    "iso3": "MNP",
+    "population": 43541,
+    "gdp_per_capita": 23785.754590043,
+    "co2_per_capita": 0.00225845792492886,
+    "internet_users_pct": 0
+  },
+  {
+    "iso3": "MOZ",
+    "population": 35631653,
+    "gdp_per_capita": 626.914419215727,
+    "co2_per_capita": 0.292006477521244,
+    "internet_users_pct": 20.52729988
+  },
+  {
+    "iso3": "MRT",
+    "population": 5315065,
+    "gdp_per_capita": 2197.51046251309,
+    "co2_per_capita": 0.969475151347498,
+    "internet_users_pct": 45.77939987
+  },
+  {
+    "iso3": "MUS",
+    "population": 1243741,
+    "gdp_per_capita": 12991.2935987166,
+    "co2_per_capita": 3.53634151803811,
+    "internet_users_pct": 73.30793533
+  },
+  {
+    "iso3": "MWI",
+    "population": 22216120,
+    "gdp_per_capita": 671.506847203876,
+    "co2_per_capita": 0.221419380007265,
+    "internet_users_pct": 18.96159935
+  },
+  {
+    "iso3": "MYS",
+    "population": 35977838,
+    "gdp_per_capita": 13124.5554178269,
+    "co2_per_capita": 8.32321620146515,
+    "internet_users_pct": 98.0206059
+  },
+  {
+    "iso3": "NAC",
+    "population": 383501065,
+    "gdp_per_capita": 86308.0717272746,
+    "co2_per_capita": 13.6637410857506,
+    "internet_users_pct": 95.6
+  },
+  {
+    "iso3": "NAM",
+    "population": 3092816,
+    "gdp_per_capita": 4875.92558158247,
+    "co2_per_capita": 1.20450237960009,
+    "internet_users_pct": 64.87460327
+  },
+  {
+    "iso3": "NCL",
+    "population": 295333,
+    "gdp_per_capita": 29213.1923192946,
+    "co2_per_capita": 17.0800884366062,
+    "internet_users_pct": 82.0058408035186
+  },
+  {
+    "iso3": "NER",
+    "population": 27917831,
+    "gdp_per_capita": 775.353622143879,
+    "co2_per_capita": 0.118901709547783,
+    "internet_users_pct": 15.55760002
+  },
+  {
+    "iso3": "NGA",
+    "population": 237527782,
+    "gdp_per_capita": 1224.25410237743,
+    "co2_per_capita": 0.566917637661195,
+    "internet_users_pct": 41.21139908
+  },
+  {
+    "iso3": "NIC",
+    "population": 7007502,
+    "gdp_per_capita": 3173.33724815085,
+    "co2_per_capita": 0.829841501184187,
+    "internet_users_pct": 61.39550018
+  },
+  {
+    "iso3": "NLD",
+    "population": 18087633,
+    "gdp_per_capita": 73683.917132794,
+    "co2_per_capita": 6.60188395966651,
+    "internet_users_pct": 97.00679779
+  },
+  {
+    "iso3": "NOR",
+    "population": 5610870,
+    "gdp_per_capita": 94594.1929573987,
+    "co2_per_capita": 7.17830173255862,
+    "internet_users_pct": 99
+  },
+  {
+    "iso3": "NPL",
+    "population": 29618118,
+    "gdp_per_capita": 1535.87781246307,
+    "co2_per_capita": 0.535964084109792,
+    "internet_users_pct": 46.32189941
+  },
+  {
+    "iso3": "NRU",
+    "population": 12025,
+    "gdp_per_capita": 14639.5046929186,
+    "co2_per_capita": 0,
+    "internet_users_pct": 83.01170349
+  },
+  {
+    "iso3": "NZL",
+    "population": 5324700,
+    "gdp_per_capita": 49591.0405731713,
+    "co2_per_capita": 6.01410207939509,
+    "internet_users_pct": 93.51930237
+  },
+  {
+    "iso3": "OMN",
+    "population": 5494691,
+    "gdp_per_capita": 19947.3966227092,
+    "co2_per_capita": 18.6519911434889,
+    "internet_users_pct": 95.25174678
+  },
+  {
+    "iso3": "PAK",
+    "population": 255219554,
+    "gdp_per_capita": 1595.90912252837,
+    "co2_per_capita": 0.811831809174961,
+    "internet_users_pct": 57.253
+  },
+  {
+    "iso3": "PAN",
+    "population": 4571189,
+    "gdp_per_capita": 19789.7308555826,
+    "co2_per_capita": 2.73829900364892,
+    "internet_users_pct": 72.77149963
+  },
+  {
+    "iso3": "PER",
+    "population": 34576665,
+    "gdp_per_capita": 9684.41170314988,
+    "co2_per_capita": 2.02424185179617,
+    "internet_users_pct": 81.95705992
+  },
+  {
+    "iso3": "PHL",
+    "population": 116786962,
+    "gdp_per_capita": 4170.72347271451,
+    "co2_per_capita": 1.5030109111702,
+    "internet_users_pct": 67.26300914
+  },
+  {
+    "iso3": "PLW",
+    "population": 17663,
+    "gdp_per_capita": 19532.3557719527,
+    "co2_per_capita": 82.8426109070359,
+    "internet_users_pct": 83.92549896
+  },
+  {
+    "iso3": "PNG",
+    "population": 10762817,
+    "gdp_per_capita": 3019.5309140573,
+    "co2_per_capita": 0.516966762734976,
+    "internet_users_pct": 18.81159973
+  },
+  {
+    "iso3": "POL",
+    "population": 36435861,
+    "gdp_per_capita": 28419.5777395638,
+    "co2_per_capita": 7.55108565871718,
+    "internet_users_pct": 88.58496367
+  },
+  {
+    "iso3": "PRI",
+    "population": 3184835,
+    "gdp_per_capita": 40620.1526923687,
+    "co2_per_capita": 4.81811048233563,
+    "internet_users_pct": 87.29178106
+  },
+  {
+    "iso3": "PRT",
+    "population": 10804871,
+    "gdp_per_capita": 32081.8106150292,
+    "co2_per_capita": 3.32476489948602,
+    "internet_users_pct": 88.48704454
+  },
+  {
+    "iso3": "PRY",
+    "population": 7013078,
+    "gdp_per_capita": 7026.61906146401,
+    "co2_per_capita": 1.1581935050359,
+    "internet_users_pct": 81.57806793
+  },
+  {
+    "iso3": "PYF",
+    "population": 282465,
+    "gdp_per_capita": 22439.8838746025,
+    "co2_per_capita": 3.45591131519089,
+    "internet_users_pct": 72.7038953132942
+  },
+  {
+    "iso3": "QAT",
+    "population": 2972215,
+    "gdp_per_capita": 72524.9066385222,
+    "co2_per_capita": 47.3321641445828,
+    "internet_users_pct": 98.08540344
+  },
+  {
+    "iso3": "ROU",
+    "population": 19020271,
+    "gdp_per_capita": 22537.9532108047,
+    "co2_per_capita": 3.72055055783694,
+    "internet_users_pct": 91.29048551
+  },
+  {
+    "iso3": "RUS",
+    "population": 143513328,
+    "gdp_per_capita": 17546.609375,
+    "co2_per_capita": 13.9845411189425,
+    "internet_users_pct": 94.36495368
+  },
+  {
+    "iso3": "RWA",
+    "population": 14569341,
+    "gdp_per_capita": 1123.73874633225,
+    "co2_per_capita": 0.162128792997641,
+    "internet_users_pct": 31.70330048
+  },
+  {
+    "iso3": "SAS",
+    "population": 1692252900,
+    "gdp_per_capita": 2705.28227429085,
+    "co2_per_capita": 1.9797015154543,
+    "internet_users_pct": 67.8
+  },
+  {
+    "iso3": "SAU",
+    "population": 36973555,
+    "gdp_per_capita": 34536.6555456551,
+    "co2_per_capita": 18.4845842582552,
+    "internet_users_pct": 100
+  },
+  {
+    "iso3": "SDN",
+    "population": 51662147,
+    "gdp_per_capita": 1164.53991699219,
+    "co2_per_capita": 0.433463815698253,
+    "internet_users_pct": 18.60000038
+  },
+  {
+    "iso3": "SEN",
+    "population": 18931966,
+    "gdp_per_capita": 1954.71174194867,
+    "co2_per_capita": 0.767609570951958,
+    "internet_users_pct": 60.11780167
+  },
+  {
+    "iso3": "SGP",
+    "population": 6111175,
+    "gdp_per_capita": 98813.9788172877,
+    "co2_per_capita": 9.75144363129176,
+    "internet_users_pct": 94.37757178
+  },
+  {
+    "iso3": "SLB",
+    "population": 838645,
+    "gdp_per_capita": 2086.18955928928,
+    "co2_per_capita": 0.383912070097827,
+    "internet_users_pct": 29.04070091
+  },
+  {
+    "iso3": "SLE",
+    "population": 8819794,
+    "gdp_per_capita": 846.296172499617,
+    "co2_per_capita": 0.16915022896262,
+    "internet_users_pct": 25.10499954
+  },
+  {
+    "iso3": "SLV",
+    "population": 6365503,
+    "gdp_per_capita": 5766.72574029107,
+    "co2_per_capita": 1.50569728627702,
+    "internet_users_pct": 66.47769928
+  },
+  {
+    "iso3": "SOM",
+    "population": 19654739,
+    "gdp_per_capita": 661.173877723116,
+    "co2_per_capita": 0.0455149206821494,
+    "internet_users_pct": 27.94020081
+  },
+  {
+    "iso3": "SSA",
+    "population": 1321531487,
+    "gdp_per_capita": 1671.41989803328,
+    "co2_per_capita": 0.70074501480166,
+    "internet_users_pct": 36.5
+  },
+  {
+    "iso3": "SSF",
+    "population": 1321654217,
+    "gdp_per_capita": 1673.07077574497,
+    "co2_per_capita": 0.701365645638598,
+    "internet_users_pct": 35.7
+  },
+  {
+    "iso3": "SST",
+    "population": 20347135,
+    "gdp_per_capita": 16577.8450757077,
+    "co2_per_capita": 4.41526557538702,
+    "internet_users_pct": 0
+  },
+  {
+    "iso3": "STP",
+    "population": 240254,
+    "gdp_per_capita": 4084.40062145233,
+    "co2_per_capita": 0.627080361388493,
+    "internet_users_pct": 59.11759949
+  },
+  {
+    "iso3": "SUR",
+    "population": 639850,
+    "gdp_per_capita": 7069.87230892274,
+    "co2_per_capita": 4.06111933370217,
+    "internet_users_pct": 87.4
+  },
+  {
+    "iso3": "SVK",
+    "population": 5413813,
+    "gdp_per_capita": 28543.6653439813,
+    "co2_per_capita": 5.51311685631444,
+    "internet_users_pct": 89.82507032
+  },
+  {
+    "iso3": "SVN",
+    "population": 2130986,
+    "gdp_per_capita": 37376.2216079138,
+    "co2_per_capita": 6.26652251574692,
+    "internet_users_pct": 90.76355487
+  },
+  {
+    "iso3": "SWE",
+    "population": 10596620,
+    "gdp_per_capita": 63133.2126736715,
+    "co2_per_capita": 3.57381645984766,
+    "internet_users_pct": 95.76629783
+  },
+  {
+    "iso3": "SWZ",
+    "population": 1256174,
+    "gdp_per_capita": 4108.25221093363,
+    "co2_per_capita": 0.880335237065324,
+    "internet_users_pct": 63.40309906
+  },
+  {
+    "iso3": "SYC",
+    "population": 122730,
+    "gdp_per_capita": 19449.3836346926,
+    "co2_per_capita": 7.23667946668425,
+    "internet_users_pct": 87.81800079
+  },
+  {
+    "iso3": "SYR",
+    "population": 25620427,
+    "gdp_per_capita": 1056.78264718197,
+    "co2_per_capita": 1.27467701221914,
+    "internet_users_pct": 33.77000046
+  },
+  {
+    "iso3": "TCA",
+    "population": 46855,
+    "gdp_per_capita": 37506.7798431288,
+    "co2_per_capita": 4.92317610400774,
+    "internet_users_pct": 0
+  },
+  {
+    "iso3": "TCD",
+    "population": 21003705,
+    "gdp_per_capita": 1022.33559390754,
+    "co2_per_capita": 0.142508619707364,
+    "internet_users_pct": 12.62689972
+  },
+  {
+    "iso3": "TEA",
+    "population": 2117367063,
+    "gdp_per_capita": 10965.8265646099,
+    "co2_per_capita": 7.20519624032874,
+    "internet_users_pct": 88.9
+  },
+  {
+    "iso3": "TEC",
+    "population": 462559433,
+    "gdp_per_capita": 15300.0702229683,
+    "co2_per_capita": 8.09205078272868,
+    "internet_users_pct": 90.8
+  },
+  {
+    "iso3": "TGO",
+    "population": 8591626,
+    "gdp_per_capita": 1383.89974929887,
+    "co2_per_capita": 0.312565499458875,
+    "internet_users_pct": 39.48320007
+  },
+  {
+    "iso3": "THA",
+    "population": 71619863,
+    "gdp_per_capita": 8056.56359761558,
+    "co2_per_capita": 3.96005269352319,
+    "internet_users_pct": 90.86718789
+  },
+  {
+    "iso3": "TJK",
+    "population": 10786734,
+    "gdp_per_capita": 1637.2542942547,
+    "co2_per_capita": 0.922478268427306,
+    "internet_users_pct": 55.79339981
+  },
+  {
+    "iso3": "TKM",
+    "population": 7618847,
+    "gdp_per_capita": 6540.17876401136,
+    "co2_per_capita": 10.8623686336296,
+    "internet_users_pct": 17.99029922
+  },
+  {
+    "iso3": "TLA",
+    "population": 651467364,
+    "gdp_per_capita": 10822.5929247606,
+    "co2_per_capita": 2.6775410663542,
+    "internet_users_pct": 83.9
+  },
+  {
+    "iso3": "TLS",
+    "population": 1418517,
+    "gdp_per_capita": 1340.9640193437,
+    "co2_per_capita": 0.499343870436187,
+    "internet_users_pct": 35.04199982
+  },
+  {
+    "iso3": "TMN",
+    "population": 748489811,
+    "gdp_per_capita": 2826.65540584536,
+    "co2_per_capita": 2.72400325211606,
+    "internet_users_pct": 60.2
+  },
+  {
+    "iso3": "TON",
+    "population": 103742,
+    "gdp_per_capita": 6547.18646814228,
+    "co2_per_capita": 1.62994960403168,
+    "internet_users_pct": 67.4417038
+  },
+  {
+    "iso3": "TSA",
+    "population": 1692252900,
+    "gdp_per_capita": 2705.28227429085,
+    "co2_per_capita": 1.9797015154543,
+    "internet_users_pct": 67.8
+  },
+  {
+    "iso3": "TSS",
+    "population": 1321654217,
+    "gdp_per_capita": 1673.07077574497,
+    "co2_per_capita": 0.701365645638598,
+    "internet_users_pct": 35.2
+  },
+  {
+    "iso3": "TTO",
+    "population": 1367764,
+    "gdp_per_capita": 18967.2704636681,
+    "co2_per_capita": 19.5810522730943,
+    "internet_users_pct": 82.15989685
+  },
+  {
+    "iso3": "TUN",
+    "population": 12348573,
+    "gdp_per_capita": 4656.63818386852,
+    "co2_per_capita": 2.62113010481539,
+    "internet_users_pct": 76.5
+  },
+  {
+    "iso3": "TUR",
+    "population": 85878556,
+    "gdp_per_capita": 18599.4420922378,
+    "co2_per_capita": 5.37926453268486,
+    "internet_users_pct": 89.77024003
+  },
+  {
+    "iso3": "TUV",
+    "population": 9492,
+    "gdp_per_capita": 6041.44908591428,
+    "co2_per_capita": 0,
+    "internet_users_pct": 35.20000076
+  },
+  {
+    "iso3": "TZA",
+    "population": 70545865,
+    "gdp_per_capita": 1318.81921386719,
+    "co2_per_capita": 0.311205530057348,
+    "internet_users_pct": 31.16209984
+  },
+  {
+    "iso3": "UGA",
+    "population": 51384894,
+    "gdp_per_capita": 1206.30450825002,
+    "co2_per_capita": 0.165048181856788,
+    "internet_users_pct": 8.949831061
+  },
+  {
+    "iso3": "UKR",
+    "population": 38980376,
+    "gdp_per_capita": 5865.884765625,
+    "co2_per_capita": 3.12934781865114,
+    "internet_users_pct": 82.47489929
+  },
+  {
+    "iso3": "URY",
+    "population": 3384688,
+    "gdp_per_capita": 25215.8238152781,
+    "co2_per_capita": 2.56756948291319,
+    "internet_users_pct": 91.99109007
+  },
+  {
+    "iso3": "USA",
+    "population": 341784857,
+    "gdp_per_capita": 90026.5163005744,
+    "co2_per_capita": 13.6238622652793,
+    "internet_users_pct": 94.69380188
+  },
+  {
+    "iso3": "UZB",
+    "population": 37053428,
+    "gdp_per_capita": 3968.2720079072,
+    "co2_per_capita": 4.08501666540206,
+    "internet_users_pct": 89.50550079
+  },
+  {
+    "iso3": "VCT",
+    "population": 99924,
+    "gdp_per_capita": 12561.769166789,
+    "co2_per_capita": 1.31191858153773,
+    "internet_users_pct": 76.19010162
+  },
+  {
+    "iso3": "VEN",
+    "population": 28516896,
+    "gdp_per_capita": 3494.8138870244,
+    "co2_per_capita": 3.39410515757435,
+    "internet_users_pct": 76.67890167
+  },
+  {
+    "iso3": "VIR",
+    "population": 103792,
+    "gdp_per_capita": 44320.909185774,
+    "co2_per_capita": 0.00191613094838901,
+    "internet_users_pct": 64.3774942980087
+  },
+  {
+    "iso3": "VNM",
+    "population": 101598527,
+    "gdp_per_capita": 5065.99091899299,
+    "co2_per_capita": 4.26605675468195,
+    "internet_users_pct": 84.15
+  },
+  {
+    "iso3": "VUT",
+    "population": 335169,
+    "gdp_per_capita": 4038.73520713411,
+    "co2_per_capita": 0.869798674098549,
+    "internet_users_pct": 22.35140038
+  },
+  {
+    "iso3": "WLD",
+    "population": 8215424893,
+    "gdp_per_capita": 14405.8484595528,
+    "co2_per_capita": 4.69378456136626,
+    "internet_users_pct": 73.6
+  },
+  {
+    "iso3": "WSM",
+    "population": 219306,
+    "gdp_per_capita": 5872.78333308796,
+    "co2_per_capita": 1.60444731881166,
+    "internet_users_pct": 21.20000076
+  },
+  {
+    "iso3": "YEM",
+    "population": 41773878,
+    "gdp_per_capita": 633.887202451545,
+    "co2_per_capita": 0.260706631942251,
+    "internet_users_pct": 17.49099922
+  },
+  {
+    "iso3": "ZAF",
+    "population": 64747319,
+    "gdp_per_capita": 6597.71450918774,
+    "co2_per_capita": 6.87684962627712,
+    "internet_users_pct": 78.35759735
+  },
+  {
+    "iso3": "ZMB",
+    "population": 21913874,
+    "gdp_per_capita": 1317.87771619597,
+    "co2_per_capita": 0.542961477377669,
+    "internet_users_pct": 17.10099983
+  },
+  {
+    "iso3": "ZWE",
+    "population": 16950795,
+    "gdp_per_capita": 3021.43019873632,
+    "co2_per_capita": 0.772821434267465,
+    "internet_users_pct": 41.64279938
+  }
 ]

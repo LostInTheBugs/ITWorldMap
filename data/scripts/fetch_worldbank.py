@@ -14,7 +14,7 @@ from pathlib import Path
 INDICATORS = {
     "population": "SP.POP.TOTL",
     "gdp_per_capita": "NY.GDP.PCAP.CD",
-    "co2_per_capita": "EN.ATM.CO2E.PC",
+    "co2_per_capita": "EN.GHG.CO2.PC.CE.AR5",
     "internet_users_pct": "IT.NET.USER.ZS",
 }
 
