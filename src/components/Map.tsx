@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MapContainer, GeoJSON, TileLayer } from "react-leaflet";
 import type { PathOptions } from "leaflet";
 import ColorLegend from "./ColorLegend";
@@ -13,13 +13,43 @@ interface Props {
   indicator: string;
 }
 
-function getColor(value: number, min: number, max: number): string {
-  if (max === min) return "#3388ff";
-  const ratio = (value - min) / (max - min);
-  const r = Math.floor(255 * (1 - ratio));
-  const g = Math.floor(100 + 100 * ratio);
-  const b = Math.floor(255 * ratio);
-  return `rgb(${r},${g},${b})`;
+// Fallback name→ISO3 pour les pays avec code -99 dans le GeoJSON
+const NAME_TO_ISO3: Record<string, string> = {
+  "France": "FRA",
+  "Norway": "NOR",
+  "Kosovo": "XKX",
+  "Somaliland": "SOM",
+  "Northern Cyprus": "CYP",
+  "Western Sahara": "ESH",
+};
+
+function getIso3(feature: any): string | undefined {
+  const props = feature?.properties;
+  if (!props) return undefined;
+  const iso3 = props["ISO3166-1-Alpha-3"];
+  if (iso3 && iso3 !== "-99") return iso3;
+  const name = props.ADMIN || props.name || "";
+  return NAME_TO_ISO3[name] || undefined;
+}
+
+// Palette de couleurs (6 niveaux)
+const PALETTE = [
+  "rgb(8,48,107)",    // Très faible
+  "rgb(33,113,181)",  // Faible
+  "rgb(66,146,198)",  // Moyen-faible
+  "rgb(107,174,214)", // Moyen
+  "rgb(189,201,225)", // Élevé
+  "rgb(239,243,255)", // Très élevé
+];
+
+function getQuantileColor(
+  value: number,
+  thresholds: number[]
+): string {
+  for (let i = 0; i < thresholds.length; i++) {
+    if (value <= thresholds[i]) return PALETTE[i];
+  }
+  return PALETTE[PALETTE.length - 1];
 }
 
 export default function Map({ data, indicator }: Props) {
@@ -40,16 +70,28 @@ export default function Map({ data, indicator }: Props) {
     }
   });
 
-  const values = Object.values(valueMap);
-  const min = values.length > 0 ? Math.min(...values) : 0;
-  const max = values.length > 0 ? Math.max(...values) : 1;
+  const values = Object.values(valueMap).sort((a, b) => a - b);
+  const N = PALETTE.length;
+
+  // Seuils de quantiles (une valeur seuil par intervalle)
+  const thresholds = useMemo(() => {
+    if (values.length === 0) return [0, 0, 0, 0, 0];
+    const t: number[] = [];
+    for (let i = 1; i < N; i++) {
+      const idx = Math.floor((values.length * i) / N);
+      t.push(values[Math.min(idx, values.length - 1)]);
+    }
+    return t;
+  }, [values]);
 
   const style = (feature: any): PathOptions => {
-    const iso3 = feature?.properties?.ISO_A3;
+    const iso3 = getIso3(feature);
     const value = iso3 ? valueMap[iso3] : undefined;
     return {
       fillColor:
-        value !== undefined ? getColor(value, min, max) : "#2a2a2a",
+        value !== undefined
+          ? getQuantileColor(value, thresholds)
+          : "#2a2a2a",
       weight: 1,
       opacity: 1,
       color: "#444444",
@@ -58,7 +100,7 @@ export default function Map({ data, indicator }: Props) {
   };
 
   const onEachFeature = (feature: any, layer: any) => {
-    const iso3 = feature?.properties?.ISO_A3;
+    const iso3 = getIso3(feature);
     const name =
       feature?.properties?.ADMIN || feature?.properties?.name || "";
     const value = iso3 ? valueMap[iso3] : undefined;
@@ -94,7 +136,11 @@ export default function Map({ data, indicator }: Props) {
           />
         )}
       </MapContainer>
-      <ColorLegend min={min} max={max} getColor={getColor} />
+      <ColorLegend
+        palette={PALETTE}
+        thresholds={[0, ...thresholds]}
+        values={values}
+      />
     </div>
   );
 }

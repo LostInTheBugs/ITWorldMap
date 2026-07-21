@@ -5,26 +5,27 @@
 
 Carte du monde interactive visualisant des indicateurs IT (IPv6, Internet, IA) croisés avec des données socio-économiques (population, PIB, CO₂).
 
-## 🚀 Démo
-
-- **GitHub Pages** : [lostinthebugs.github.io/ITWorldMap/](https://lostinthebugs.github.io/ITWorldMap/)
-- **Docker** : `http://localhost:3001` (après installation)
-
 ## 📦 Installation rapide (Docker)
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/LostInTheBugs/ITWorldMap/main/install.sh | bash
 ```
 
+L'application sera accessible sur `http://localhost:3001`.
+
+Variables d'environnement optionnelles :
+
+```bash
+ITWM_DIR=/opt/itworldmap ITWM_PORT=8080 bash install.sh
+```
+
 Ou manuellement :
 
 ```bash
-git clone https://github.com/LostInTheBugs/ITWorldMap.git /opt/itworldmap
-cd /opt/itworldmap
+git clone https://github.com/LostInTheBugs/ITWorldMap.git
+cd ITWorldMap
 PORT=3001 docker compose up -d --build
 ```
-
-L'application sera accessible sur `http://localhost:3001`.
 
 ## 📊 Indicateurs
 
@@ -62,7 +63,7 @@ PORT=3001 docker compose up -d --build
 docker logs itworldmap
 
 # Mise à jour
-cd /opt/itworldmap
+cd ITWorldMap
 git pull origin main
 PORT=3001 docker compose up -d --build
 ```

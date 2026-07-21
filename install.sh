@@ -1,15 +1,20 @@
 #!/bin/bash
-# ITWorldMap — Script d'installation
+# ITWorldMap — Script d'installation (sans root)
 # Usage : curl -sSL https://raw.githubusercontent.com/LostInTheBugs/ITWorldMap/main/install.sh | bash
+# Variables d'environnement :
+#   ITWM_DIR  : répertoire d'installation (défaut : ./itworldmap)
+#   ITWM_PORT : port d'écoute (défaut : 3001)
 set -e
 
-APP_DIR="/opt/itworldmap"
-PORT="${PORT:-3001}"
+APP_DIR="${ITWM_DIR:-$(pwd)/itworldmap}"
+PORT="${ITWM_PORT:-3001}"
 
 echo "🌍 ITWorldMap — Installation"
+echo "   Dossier : $APP_DIR"
+echo "   Port    : $PORT"
 echo "============================"
 
-# Git + Docker requis
+# Prérequis
 command -v git >/dev/null 2>&1 || { echo "❌ git requis"; exit 1; }
 command -v docker >/dev/null 2>&1 || { echo "❌ docker requis"; exit 1; }
 
@@ -21,8 +26,6 @@ if [ -d "$APP_DIR/.git" ]; then
     git reset --hard origin/main
 else
     echo "📦 Clonage du dépôt..."
-    sudo mkdir -p "$APP_DIR"
-    sudo chown "$(whoami):$(whoami)" "$APP_DIR"
     git clone https://github.com/LostInTheBugs/ITWorldMap.git "$APP_DIR"
     cd "$APP_DIR"
 fi
@@ -39,6 +42,6 @@ if curl -s -o /dev/null -w "%{http_code}" "http://localhost:$PORT" | grep -q 200
     echo "   ➜ http://localhost:$PORT"
 else
     echo ""
-    echo "⚠️  Conteneur démarré mais pas encore prêt. Vérifie avec :"
+    echo "⚠️  Conteneur démarré. Vérifie avec :"
     echo "   docker logs itworldmap"
 fi
