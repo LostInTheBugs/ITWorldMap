@@ -1,0 +1,18 @@
+[
+  {"iso3": "FRA", "population": 67935660, "gdp_per_capita": 40886, "co2_per_capita": 4.6, "internet_users_pct": 85.3, "ipv6_adoption_pct": 72.5},
+  {"iso3": "USA", "population": 334914895, "gdp_per_capita": 76330, "co2_per_capita": 14.7, "internet_users_pct": 91.8, "ipv6_adoption_pct": 56.2},
+  {"iso3": "DEU", "population": 83294633, "gdp_per_capita": 51204, "co2_per_capita": 8.1, "internet_users_pct": 89.5, "ipv6_adoption_pct": 68.3},
+  {"iso3": "JPN", "population": 125124989, "gdp_per_capita": 34017, "co2_per_capita": 8.6, "internet_users_pct": 92.5, "ipv6_adoption_pct": 48.7},
+  {"iso3": "IND", "population": 1428627663, "gdp_per_capita": 2411, "co2_per_capita": 1.8, "internet_users_pct": 46.3, "ipv6_adoption_pct": 78.9},
+  {"iso3": "CHN", "population": 1425671352, "gdp_per_capita": 12720, "co2_per_capita": 7.4, "internet_users_pct": 73.1, "ipv6_adoption_pct": 34.5},
+  {"iso3": "BRA", "population": 216422446, "gdp_per_capita": 8918, "co2_per_capita": 2.2, "internet_users_pct": 80.0, "ipv6_adoption_pct": 41.2},
+  {"iso3": "GBR", "population": 67736802, "gdp_per_capita": 46435, "co2_per_capita": 5.2, "internet_users_pct": 94.8, "ipv6_adoption_pct": 38.1},
+  {"iso3": "CAN", "population": 40097761, "gdp_per_capita": 54917, "co2_per_capita": 15.2, "internet_users_pct": 93.1, "ipv6_adoption_pct": 42.5},
+  {"iso3": "AUS", "population": 26439111, "gdp_per_capita": 64814, "co2_per_capita": 15.1, "internet_users_pct": 90.0, "ipv6_adoption_pct": 35.8},
+  {"iso3": "KOR", "population": 51784059, "gdp_per_capita": 34880, "co2_per_capita": 11.3, "internet_users_pct": 96.5, "ipv6_adoption_pct": 18.4},
+  {"iso3": "RUS", "population": 144236933, "gdp_per_capita": 13165, "co2_per_capita": 11.1, "internet_users_pct": 85.0, "ipv6_adoption_pct": 10.2},
+  {"iso3": "ZAF", "population": 60414495, "gdp_per_capita": 6766, "co2_per_capita": 7.3, "internet_users_pct": 68.2, "ipv6_adoption_pct": 6.8},
+  {"iso3": "NGA", "population": 223804632, "gdp_per_capita": 2221, "co2_per_capita": 0.6, "internet_users_pct": 36.5, "ipv6_adoption_pct": 15.3},
+  {"iso3": "MEX", "population": 128455567, "gdp_per_capita": 10287, "co2_per_capita": 3.6, "internet_users_pct": 72.0, "ipv6_adoption_pct": 45.1},
+  {"iso3": "IDN", "population": 277534122, "gdp_per_capita": 4788, "co2_per_capita": 2.3, "internet_users_pct": 62.0, "ipv6_adoption_pct": 22.7}
+]
