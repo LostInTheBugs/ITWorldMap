@@ -15,19 +15,15 @@ export default function App() {
   const [indicator, setIndicator] = useState("population");
 
   return (
-    <div className="h-screen w-screen flex">
-      {/* Sidebar */}
-      <div className="w-80 bg-gray-900 text-white p-4 flex flex-col gap-3 overflow-y-auto shrink-0">
-        <h1 className="text-xl font-bold">🌍 ITWorldMap</h1>
-        <p className="text-sm text-gray-400">
-          Indicateurs IT & socio-économiques par pays
-        </p>
+    <div className="h-screen w-screen relative">
+      {/* Carte plein écran */}
+      <Map data={indicatorsData as any} indicator={indicator} />
 
-        <h2 className="text-xs font-semibold mt-3 text-gray-500 uppercase tracking-wider">
-          Indicateur
-        </h2>
+      {/* Overlay : titre + sélecteur (haut gauche) */}
+      <div className="absolute top-4 left-4 z-[1000] bg-gray-900/90 backdrop-blur rounded-lg shadow-lg p-3 text-white max-w-[260px]">
+        <h1 className="text-base font-bold mb-2">🌍 ITWorldMap</h1>
         <select
-          className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+          className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
           value={indicator}
           onChange={(e) => setIndicator(e.target.value)}
         >
@@ -37,11 +33,12 @@ export default function App() {
             </option>
           ))}
         </select>
+      </div>
 
-        <hr className="border-gray-700 my-2" />
-
-        <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-          Corrélation PIB vs.
+      {/* Overlay : scatter plot (bas gauche) */}
+      <div className="absolute bottom-4 left-4 z-[1000] bg-gray-900/90 backdrop-blur rounded-lg shadow-lg p-3 text-white">
+        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+          PIB vs. {INDICATORS.find((i) => i.key === indicator)?.label || ""}
         </h2>
         <ScatterPlot
           data={indicatorsData as any}
@@ -50,11 +47,6 @@ export default function App() {
           xLabel="PIB / habitant ($ US)"
           yLabel={INDICATORS.find((i) => i.key === indicator)?.label || ""}
         />
-      </div>
-
-      {/* Map */}
-      <div className="flex-1 relative">
-        <Map data={indicatorsData as any} indicator={indicator} />
       </div>
     </div>
   );
