@@ -1,0 +1,7 @@
+services:
+  app:
+    build: .
+    container_name: itworldmap
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3001}:80"
