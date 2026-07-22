@@ -107,8 +107,6 @@ export default function Map({ data, indicator, showCables }: Props) {
         zoom={2}
         minZoom={2}
         maxZoom={10}
-        maxBounds={[[-85, -180], [85, 180]]}
-        maxBoundsViscosity={1.0}
         style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "#f0f0f0" }}
         zoomControl={true}
         scrollWheelZoom={true}
