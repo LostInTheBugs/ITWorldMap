@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { MapContainer, GeoJSON, TileLayer } from "react-leaflet";
+import { MapContainer, GeoJSON } from "react-leaflet";
 import type { PathOptions } from "leaflet";
 import ColorLegend from "./ColorLegend";
+import CableLayer from "./CableLayer";
+import NoWrapTileLayer from "./NoWrapTileLayer";
 
 interface CountryData {
   iso3: string;
@@ -11,9 +13,9 @@ interface CountryData {
 interface Props {
   data: CountryData[];
   indicator: string;
+  showCables: boolean;
 }
 
-// Fallback name→ISO3 pour les pays avec code -99 dans le GeoJSON
 const NAME_TO_ISO3: Record<string, string> = {
   "France": "FRA",
   "Norway": "NOR",
@@ -32,33 +34,23 @@ function getIso3(feature: any): string | undefined {
   return NAME_TO_ISO3[name] || undefined;
 }
 
-// Palette de couleurs (6 niveaux)
 const PALETTE = [
-  "rgb(8,48,107)",    // Très faible
-  "rgb(33,113,181)",  // Faible
-  "rgb(66,146,198)",  // Moyen-faible
-  "rgb(107,174,214)", // Moyen
-  "rgb(189,201,225)", // Élevé
-  "rgb(239,243,255)", // Très élevé
+  "rgb(239,243,255)", "rgb(189,201,225)", "rgb(107,174,214)",
+  "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,48,107)",
 ];
 
-function getQuantileColor(
-  value: number,
-  thresholds: number[]
-): string {
+function getQuantileColor(value: number, thresholds: number[]): string {
   for (let i = 0; i < thresholds.length; i++) {
     if (value <= thresholds[i]) return PALETTE[i];
   }
   return PALETTE[PALETTE.length - 1];
 }
 
-export default function Map({ data, indicator }: Props) {
+export default function Map({ data, indicator, showCables }: Props) {
   const [geoData, setGeoData] = useState<any>(null);
 
   useEffect(() => {
-    fetch(
-      "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson"
-    )
+    fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
       .then((r) => r.json())
       .then(setGeoData);
   }, []);
@@ -73,7 +65,6 @@ export default function Map({ data, indicator }: Props) {
   const values = Object.values(valueMap).sort((a, b) => a - b);
   const N = PALETTE.length;
 
-  // Seuils de quantiles (une valeur seuil par intervalle)
   const thresholds = useMemo(() => {
     if (values.length === 0) return [0, 0, 0, 0, 0];
     const t: number[] = [];
@@ -88,10 +79,7 @@ export default function Map({ data, indicator }: Props) {
     const iso3 = getIso3(feature);
     const value = iso3 ? valueMap[iso3] : undefined;
     return {
-      fillColor:
-        value !== undefined
-          ? getQuantileColor(value, thresholds)
-          : "#2a2a2a",
+      fillColor: value !== undefined ? getQuantileColor(value, thresholds) : "#d4d4d4",
       weight: 1,
       opacity: 1,
       color: "#444444",
@@ -101,46 +89,37 @@ export default function Map({ data, indicator }: Props) {
 
   const onEachFeature = (feature: any, layer: any) => {
     const iso3 = getIso3(feature);
-    const name =
-      feature?.properties?.ADMIN || feature?.properties?.name || "";
+    const name = feature?.properties?.ADMIN || feature?.properties?.name || "";
     const value = iso3 ? valueMap[iso3] : undefined;
     const formatted =
       value !== undefined
-        ? value >= 1e6
-          ? `${(value / 1e6).toFixed(1)}M`
-          : value >= 1e3
-          ? `${(value / 1e3).toFixed(0)}k`
-          : value.toFixed(1)
+        ? value >= 1e6 ? `${(value / 1e6).toFixed(1)}M`
+        : value >= 1e3 ? `${(value / 1e3).toFixed(0)}k`
+        : value.toFixed(1)
         : "N/A";
     layer.bindTooltip(`${name}: ${formatted}`, { sticky: true });
   };
 
   return (
-    <div className="h-full w-full relative">
+    <>
       <MapContainer
         center={[20, 0]}
         zoom={2}
-        style={{ height: "100%", width: "100%", background: "#1a1a2e" }}
+        minZoom={2}
+        maxZoom={10}
+        maxBounds={[[-85, -180], [85, 180]]}
+        maxBoundsViscosity={1.0}
+        style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "#f0f0f0" }}
         zoomControl={true}
         scrollWheelZoom={true}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-        />
+        <NoWrapTileLayer />
         {geoData && (
-          <GeoJSON
-            data={geoData}
-            style={style}
-            onEachFeature={onEachFeature}
-          />
+          <GeoJSON data={geoData} style={style} onEachFeature={onEachFeature} />
         )}
+        <CableLayer visible={showCables} />
       </MapContainer>
-      <ColorLegend
-        palette={PALETTE}
-        thresholds={[0, ...thresholds]}
-        values={values}
-      />
-    </div>
+      <ColorLegend palette={PALETTE} thresholds={[0, ...thresholds]} values={values} />
+    </>
   );
 }

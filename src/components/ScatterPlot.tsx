@@ -70,16 +70,16 @@ export default function ScatterPlot({
       .attr("transform", `translate(0,${height})`)
       .call(d3.axisBottom(x).ticks(4))
       .selectAll("text")
-      .attr("fill", "#9ca3af")
+      .attr("fill", "#6b7280")
       .attr("font-size", "8");
 
     g.append("g")
       .call(d3.axisLeft(y).ticks(4))
       .selectAll("text")
-      .attr("fill", "#9ca3af")
+      .attr("fill", "#6b7280")
       .attr("font-size", "8");
 
-    g.selectAll(".domain, .tick line").attr("stroke", "#4b5563");
+    g.selectAll(".domain, .tick line").attr("stroke", "#d1d5db");
 
     // Labels
     g.append("text")
@@ -87,7 +87,7 @@ export default function ScatterPlot({
       .attr("y", height + 30)
       .attr("text-anchor", "middle")
       .attr("font-size", "9")
-      .attr("fill", "#9ca3af")
+      .attr("fill", "#6b7280")
       .text(xLabel);
 
     g.append("text")
@@ -96,12 +96,12 @@ export default function ScatterPlot({
       .attr("y", -35)
       .attr("text-anchor", "middle")
       .attr("font-size", "9")
-      .attr("fill", "#9ca3af")
+      .attr("fill", "#6b7280")
       .text(yLabel);
   }, [data, xIndicator, yIndicator, xLabel, yLabel]);
 
   return (
-    <div className="bg-gray-800 rounded-lg p-2">
+    <div className="bg-gray-100 rounded-lg p-2">
       <svg ref={svgRef} />
     </div>
   );

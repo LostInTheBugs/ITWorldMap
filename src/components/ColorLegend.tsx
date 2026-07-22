@@ -16,13 +16,12 @@ export default function ColorLegend({ palette, thresholds, values }: Props) {
   }
 
   return (
-    <div className="absolute bottom-6 right-6 bg-gray-900/90 backdrop-blur rounded-lg shadow-lg p-3 z-[1000] text-white">
-      <div className="text-[10px] font-semibold mb-1.5 text-gray-400 uppercase tracking-wider">
+    <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur rounded-lg shadow-lg p-3 z-[1000]">
+      <div className="text-[10px] font-semibold mb-1.5 text-gray-500 uppercase tracking-wider">
         Échelle (quantiles)
       </div>
       <div className="flex items-center gap-0.5">
         {palette.map((color, i) => {
-          // Intervalle : de thresholds[i-1] à thresholds[i]
           const lo = i === 0 ? min : thresholds[i - 1];
           const hi = i === palette.length - 1 ? max : thresholds[i];
           return (
