@@ -101,7 +101,7 @@ export default function ScatterPlot({
   }, [data, xIndicator, yIndicator, xLabel, yLabel]);
 
   return (
-    <div className="bg-gray-100 rounded-lg p-2">
+    <div style={{ background: "rgba(255,255,255,0.9)", borderRadius: 8, padding: 8 }}>
       <svg ref={svgRef} />
     </div>
   );
