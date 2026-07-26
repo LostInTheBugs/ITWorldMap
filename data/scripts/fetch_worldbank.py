@@ -3,8 +3,12 @@ Fetch World Bank indicators and normalize to ISO3 country codes.
 Indicators:
   - SP.POP.TOTL : Total population
   - NY.GDP.PCAP.CD : GDP per capita (current US$)
-  - EN.ATM.CO2E.PC : CO2 emissions per capita (metric tons)
+  - EN.GHG.CO2.PC.CE.AR5 : CO2 emissions per capita (metric tons)
   - IT.NET.USER.ZS : Internet users (% of population)
+  - IT.CEL.SETS.P2 : Mobile subscriptions per 100 people
+  - IT.NET.BBND.P2 : Fixed broadband subscriptions per 100 people
+  - EG.ELC.ACCS.ZS : Access to electricity (% of population)
+  - IT.NET.SECR.P6 : Secure Internet servers per 1 million people
 Output: data/processed/worldbank.json
 """
 import json
@@ -16,7 +20,13 @@ INDICATORS = {
     "gdp_per_capita": "NY.GDP.PCAP.CD",
     "co2_per_capita": "EN.GHG.CO2.PC.CE.AR5",
     "internet_users_pct": "IT.NET.USER.ZS",
+    "mobile_subscriptions_per100": "IT.CEL.SETS.P2",
+    "fixed_broadband_per100": "IT.NET.BBND.P2",
+    "electricity_access_pct": "EG.ELC.ACCS.ZS",
+    "secure_servers_per_million": "IT.NET.SECR.P6",
 }
+
+CORE_INDICATORS = ["population", "gdp_per_capita"]
 
 DATA_DIR = Path(__file__).parent.parent
 PROCESSED_DIR = DATA_DIR / "processed"
@@ -71,9 +81,9 @@ def main():
                 output[iso3] = {"iso3": iso3}
             output[iso3][name] = value
 
-    # Keep only countries with all indicators available
+    # Keep only countries with core indicators available (others are optional)
     countries = [
-        entry for entry in output.values() if all(k in entry for k in INDICATORS)
+        entry for entry in output.values() if all(k in entry for k in CORE_INDICATORS)
     ]
 
     out_path = PROCESSED_DIR / "worldbank.json"

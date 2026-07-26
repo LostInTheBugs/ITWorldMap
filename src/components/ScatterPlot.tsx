@@ -47,7 +47,10 @@ export default function ScatterPlot({
     const xExtent = d3.extent(valid, (d) => d[xIndicator]) as [number, number];
     const yExtent = d3.extent(valid, (d) => d[yIndicator]) as [number, number];
 
-    const x = d3.scaleLinear().domain(xExtent).range([0, width]).nice();
+    const x = (xIndicator === "population" ? d3.scaleLog() : d3.scaleLinear())
+      .domain(xExtent)
+      .range([0, width])
+      .nice();
     const y = d3.scaleLinear().domain(yExtent).range([height, 0]).nice();
 
     g.selectAll("circle")

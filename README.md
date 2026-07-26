@@ -37,6 +37,10 @@ PORT=3001 docker compose up -d --build
 | 💰 Économie | PIB par habitant ($ US) | World Bank |
 | 🏭 Environnement | Émissions CO₂ par habitant | World Bank |
 | 🌐 Internet | Utilisateurs Internet (% pop.) | World Bank |
+| 📱 Mobile | Abonnements mobiles /100 hab. | World Bank |
+| 🛜 Haut débit | Haut débit fixe /100 hab. | World Bank |
+| ⚡ Électricité | Accès électricité (%) | World Bank |
+| 🔒 Sécurité | Serveurs sécurisés /M hab. | World Bank |
 
 ## 🛠️ Développement
 

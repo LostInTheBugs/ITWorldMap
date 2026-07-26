@@ -8,11 +8,26 @@ const INDICATORS: { key: string; label: string }[] = [
   { key: "gdp_per_capita", label: "💰 PIB / habitant ($ US)" },
   { key: "co2_per_capita", label: "🏭 CO₂ / habitant (tonnes)" },
   { key: "internet_users_pct", label: "🌐 Utilisateurs Internet (%)" },
+  { key: "mobile_subscriptions_per100", label: "📱 Abonnements mobiles /100 hab." },
+  { key: "fixed_broadband_per100", label: "🛜 Haut débit fixe /100 hab." },
+  { key: "electricity_access_pct", label: "⚡ Accès électricité (%)" },
+  { key: "secure_servers_per_million", label: "🔒 Serveurs sécurisés /M hab." },
 ];
+
+type XAxis = "gdp_per_capita" | "population";
+
+const X_LABELS: Record<XAxis, string> = {
+  gdp_per_capita: "PIB / habitant ($ US)",
+  population: "Population",
+};
 
 export default function App() {
   const [indicator, setIndicator] = useState("population");
   const [showCables, setShowCables] = useState(false);
+  const [xAxis, setXAxis] = useState<XAxis>("gdp_per_capita");
+
+  const yLabel = INDICATORS.find(i => i.key === indicator)?.label || "";
+  const xLabel = X_LABELS[xAxis];
 
   return (
     <>
@@ -30,10 +45,16 @@ export default function App() {
       </div>
 
       <div style={{ position: "absolute", bottom: 10, left: 10, zIndex: 1000, background: "rgba(255,255,255,0.9)", borderRadius: 8, padding: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>
-        <div style={{ fontSize: 11, fontWeight: 600, color: "#666", textTransform: "uppercase", marginBottom: 4 }}>
-          PIB vs. {INDICATORS.find(i => i.key === indicator)?.label || ""}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+          <span style={{ fontSize: 11, fontWeight: 600, color: "#666", textTransform: "uppercase" }}>
+            {xLabel} vs. {yLabel}
+          </span>
+          <select value={xAxis} onChange={(e) => setXAxis(e.target.value as XAxis)} style={{ padding: "2px 6px", borderRadius: 4, border: "1px solid #ccc", fontSize: 11, outline: "none" }}>
+            <option value="gdp_per_capita">Axe X : PIB</option>
+            <option value="population">Axe X : Population</option>
+          </select>
         </div>
-        <ScatterPlot data={indicatorsData as any} xIndicator="gdp_per_capita" yIndicator={indicator} xLabel="PIB / habitant ($ US)" yLabel={INDICATORS.find(i => i.key === indicator)?.label || ""} />
+        <ScatterPlot data={indicatorsData as any} xIndicator={xAxis} yIndicator={indicator} xLabel={xLabel} yLabel={yLabel} />
       </div>
     </>
   );
