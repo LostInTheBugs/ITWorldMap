@@ -5,3 +5,15 @@ services:
     restart: unless-stopped
     ports:
       - "${PORT:-3001}:80"
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.itworldmap.rule=Host(`itworldmap.cloudfr.net`)"
+      - "traefik.http.routers.itworldmap.tls=true"
+      - "traefik.http.routers.itworldmap.tls.certresolver=letsencrypt"
+      - "traefik.http.services.itworldmap.loadbalancer.server.port=80"
+
+networks:
+  traefik-public:
+    external: true
