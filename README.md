@@ -3,7 +3,7 @@
 [![GitHub tag](https://img.shields.io/github/v/tag/LostInTheBugs/ITWorldMap?label=version)](https://github.com/LostInTheBugs/ITWorldMap/tags)
 [![Deploy](https://github.com/LostInTheBugs/ITWorldMap/actions/workflows/deploy.yml/badge.svg)](https://github.com/LostInTheBugs/ITWorldMap/actions)
 
-Carte du monde interactive visualisant des indicateurs IT (IPv6, Internet, IA) croisés avec des données socio-économiques (population, PIB, CO₂).
+Carte du monde interactive visualisant des indicateurs IT (Internet, IA) croisés avec des données socio-économiques (population, PIB, CO₂).
 
 🌐 **Démo** : [itworldmap.cloudfr.net](https://itworldmap.cloudfr.net/)
 
@@ -37,7 +37,6 @@ PORT=3001 docker compose up -d --build
 | 💰 Économie | PIB par habitant ($ US) | World Bank |
 | 🏭 Environnement | Émissions CO₂ par habitant | World Bank |
 | 🌐 Internet | Utilisateurs Internet (% pop.) | World Bank |
-| 🔗 IPv6 | Adoption IPv6 (%) | APNIC / Google |
 
 ## 🛠️ Développement
 

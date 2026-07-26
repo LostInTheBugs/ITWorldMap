@@ -20,17 +20,13 @@ def load_json(path: Path) -> dict:
 
 def main():
     wb = load_json(PROCESSED_DIR / "worldbank.json")
-    ipv6 = load_json(PROCESSED_DIR / "ipv6.json")
-
-    all_codes = set(wb.keys()) | set(ipv6.keys())
+    all_codes = set(wb.keys())
 
     merged = []
     for iso3 in sorted(all_codes):
         entry = {"iso3": iso3}
         if iso3 in wb:
             entry.update({k: v for k, v in wb[iso3].items() if k != "iso3"})
-        if iso3 in ipv6:
-            entry.update({k: v for k, v in ipv6[iso3].items() if k != "iso3"})
         merged.append(entry)
 
     SRC_DATA_DIR.mkdir(parents=True, exist_ok=True)

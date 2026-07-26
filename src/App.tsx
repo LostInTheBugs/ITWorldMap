@@ -8,7 +8,6 @@ const INDICATORS: { key: string; label: string }[] = [
   { key: "gdp_per_capita", label: "💰 PIB / habitant ($ US)" },
   { key: "co2_per_capita", label: "🏭 CO₂ / habitant (tonnes)" },
   { key: "internet_users_pct", label: "🌐 Utilisateurs Internet (%)" },
-  { key: "ipv6_adoption_pct", label: "🔗 Adoption IPv6 (%)" },
 ];
 
 export default function App() {
