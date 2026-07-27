@@ -40,7 +40,7 @@ def fetch_indicator(code: str, name: str) -> dict:
     """Fetch latest available value for each country from World Bank API."""
     url = (
         f"https://api.worldbank.org/v2/country/all/indicator/{code}"
-        f"?format=json&per_page=500&mrnev=1"
+        f"?format=json&per_page=20000"
     )
     raw_path = RAW_DIR / f"worldbank_{name}.json"
 
