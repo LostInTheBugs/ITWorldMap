@@ -10,44 +10,69 @@ interface Props {
   yLabel: string;
 }
 
-export default function ScatterPlot({
-  data,
-  xIndicator,
-  yIndicator,
-  xLabel,
-  yLabel,
-}: Props) {
+function fmt(n: number): string {
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}k`;
+  return n.toFixed(1);
+}
+
+/** Use a log scale when values are strictly positive and span >3 orders of magnitude. */
+function pickScale(extent: [number, number]) {
+  const useLog = extent[0] > 0 && extent[1] / extent[0] > 1000;
+  return useLog ? d3.scaleLog() : d3.scaleLinear();
+}
+
+export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLabel }: Props) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     const valid = data.filter(
-      (d) =>
-        typeof d[xIndicator] === "number" && typeof d[yIndicator] === "number"
+      (d) => typeof d[xIndicator] === "number" && typeof d[yIndicator] === "number",
     ) as (CountryData & Record<string, number>)[];
-
-    if (valid.length === 0) return;
-
-    const margin = { top: 15, right: 15, bottom: 35, left: 45 };
-    const width = 280 - margin.left - margin.right;
-    const height = 200 - margin.top - margin.bottom;
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    const g = svg
+    const margin = { top: 15, right: 15, bottom: 35, left: 48 };
+    const width = 280 - margin.left - margin.right;
+    const height = 200 - margin.top - margin.bottom;
+
+    svg
       .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+      .attr("height", height + margin.top + margin.bottom);
+
+    if (valid.length === 0) {
+      svg.append("text")
+        .attr("x", (width + margin.left + margin.right) / 2)
+        .attr("y", (height + margin.top + margin.bottom) / 2)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "10")
+        .attr("fill", "#9ca3af")
+        .text("Pas de données");
+      return;
+    }
+
+    const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
     const xExtent = d3.extent(valid, (d) => d[xIndicator]) as [number, number];
     const yExtent = d3.extent(valid, (d) => d[yIndicator]) as [number, number];
 
-    const x = (xIndicator === "population" ? d3.scaleLog() : d3.scaleLinear())
-      .domain(xExtent)
-      .range([0, width])
-      .nice();
-    const y = d3.scaleLinear().domain(yExtent).range([height, 0]).nice();
+    const x = pickScale(xExtent).domain(xExtent).range([0, width]).nice();
+    const y = pickScale(yExtent).domain(yExtent).range([height, 0]).nice();
+
+    // Pearson correlation (on the valid pairs)
+    const xs = valid.map((d) => d[xIndicator]);
+    const ys = valid.map((d) => d[yIndicator]);
+    const mx = d3.mean(xs)!;
+    const my = d3.mean(ys)!;
+    let num = 0, dx = 0, dy = 0;
+    for (let i = 0; i < xs.length; i++) {
+      num += (xs[i] - mx) * (ys[i] - my);
+      dx += (xs[i] - mx) ** 2;
+      dy += (ys[i] - my) ** 2;
+    }
+    const r = dx && dy ? num / Math.sqrt(dx * dy) : 0;
 
     g.selectAll("circle")
       .data(valid)
@@ -59,44 +84,36 @@ export default function ScatterPlot({
       .attr("fill", "#60a5fa")
       .attr("opacity", 0.7)
       .append("title")
-      .text(
-        (d) =>
-          `${d.iso3}: ${d[xIndicator].toFixed(1)}, ${d[yIndicator].toFixed(1)}`
-      );
+      .text((d) => `${d.iso3}: ${fmt(d[xIndicator])}, ${fmt(d[yIndicator])}`);
 
-    // Axes
     g.append("g")
       .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(x).ticks(4))
-      .selectAll("text")
-      .attr("fill", "#6b7280")
-      .attr("font-size", "8");
+      .call(d3.axisBottom(x).ticks(4).tickFormat((v) => fmt(v as number)))
+      .selectAll("text").attr("fill", "#6b7280").attr("font-size", "8");
 
     g.append("g")
-      .call(d3.axisLeft(y).ticks(4))
-      .selectAll("text")
-      .attr("fill", "#6b7280")
-      .attr("font-size", "8");
+      .call(d3.axisLeft(y).ticks(4).tickFormat((v) => fmt(v as number)))
+      .selectAll("text").attr("fill", "#6b7280").attr("font-size", "8");
 
     g.selectAll(".domain, .tick line").attr("stroke", "#d1d5db");
 
-    // Labels
     g.append("text")
-      .attr("x", width / 2)
-      .attr("y", height + 30)
-      .attr("text-anchor", "middle")
-      .attr("font-size", "9")
-      .attr("fill", "#6b7280")
+      .attr("x", width / 2).attr("y", height + 30)
+      .attr("text-anchor", "middle").attr("font-size", "9").attr("fill", "#6b7280")
       .text(xLabel);
 
     g.append("text")
       .attr("transform", "rotate(-90)")
-      .attr("x", -height / 2)
-      .attr("y", -35)
-      .attr("text-anchor", "middle")
-      .attr("font-size", "9")
-      .attr("fill", "#6b7280")
+      .attr("x", -height / 2).attr("y", -38)
+      .attr("text-anchor", "middle").attr("font-size", "9").attr("fill", "#6b7280")
       .text(yLabel);
+
+    // correlation badge
+    g.append("text")
+      .attr("x", width).attr("y", 2)
+      .attr("text-anchor", "end").attr("font-size", "9").attr("font-weight", "600")
+      .attr("fill", Math.abs(r) > 0.5 ? "#2563eb" : "#9ca3af")
+      .text(`r = ${r.toFixed(2)} (n=${valid.length})`);
   }, [data, xIndicator, yIndicator, xLabel, yLabel]);
 
   return (
