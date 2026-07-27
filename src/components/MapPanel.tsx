@@ -47,6 +47,30 @@ function fmt(n: number): string {
   return n.toFixed(1);
 }
 
+/**
+ * Leaflet caches its container size at init. When the panel shrinks (e.g. going
+ * from full-width to half-width in split mode) or the window resizes, the map
+ * keeps its old dimensions and renders the world at the wrong scale. Observing
+ * the container and calling invalidateSize() fixes the mismatch.
+ */
+function ResizeController() {
+  const map = useMap();
+  useEffect(() => {
+    const container = map.getContainer();
+    // Recompute once on mount (covers the split toggle) after layout settles.
+    const raf = requestAnimationFrame(() => map.invalidateSize({ animate: false }));
+    const observer = new ResizeObserver(() => {
+      map.invalidateSize({ animate: false });
+    });
+    observer.observe(container);
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
+  }, [map]);
+  return null;
+}
+
 /** Keeps multiple Leaflet maps in sync (pan/zoom). No-op when no syncGroup. */
 function SyncController({ syncGroup }: { syncGroup?: React.MutableRefObject<L.Map[]> }) {
   const map = useMap();
@@ -135,6 +159,7 @@ export default function MapPanel({ data, indicator, label, showCables, geoData, 
         zoomControl={true} scrollWheelZoom={true}
       >
         <NoWrapTileLayer />
+        <ResizeController />
         <SyncController syncGroup={syncGroup} />
         {geoData && (
           <GeoJSON key={geoKey} data={geoData} style={style} onEachFeature={onEachFeature} />
