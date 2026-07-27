@@ -85,7 +85,7 @@ export default function Map({ data, indicator, showCables }: Props) {
         {(geoData as boolean) && <GeoJSON data={geoData as GeoJSON.GeoJsonObject} style={style} onEachFeature={onEachFeature} />}
         <CableLayer visible={showCables} />
       </MapContainer>
-      <ColorLegend palette={PALETTE} thresholds={[0, ...thresholds]} values={values} />
+      <ColorLegend palette={PALETTE} thresholds={thresholds} values={values} />
     </>
   );
 }
