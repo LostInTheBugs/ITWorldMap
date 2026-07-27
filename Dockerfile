@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --legacy-peer-deps
 COPY . .
-RUN npm run build -- --base=/
+RUN npm run build
 
 # Étape 2 : Serve Nginx
 FROM nginx:alpine

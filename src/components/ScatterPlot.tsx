@@ -1,10 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
-
-interface CountryData {
-  iso3: string;
-  [key: string]: number | string;
-}
+import type { CountryData } from "../data/types";
 
 interface Props {
   data: CountryData[];

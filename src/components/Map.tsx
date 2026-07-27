@@ -1,16 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useCallback, useState } from "react";
 import { MapContainer, GeoJSON } from "react-leaflet";
 import type { PathOptions } from "leaflet";
 import NoWrapTileLayer from "./NoWrapTileLayer";
 import CableLayer from "./CableLayer";
 import ColorLegend from "./ColorLegend";
-
-interface CountryData { iso3: string; [key: string]: number | string; }
+import type { CountryData } from "../data/types";
 interface Props { data: CountryData[]; indicator: string; showCables: boolean; }
 
 const NAME_TO_ISO3: Record<string, string> = {
-  France: "FRA", Norway: "NOR", Kosovo: "XKX",
-  Somaliland: "SOM", "Northern Cyprus": "CYP", "Western Sahara": "ESH",
+  France: "FRA",
+  Norway: "NOR",
+  Kosovo: "XKX",
 };
 
 const PALETTE = [
@@ -31,17 +31,40 @@ function getQuantileColor(value: number, thresholds: number[]): string {
   return PALETTE[PALETTE.length - 1];
 }
 
+function fmt(n: number): string {
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}k`;
+  return n.toFixed(1);
+}
+
 export default function Map({ data, indicator, showCables }: Props) {
   const [geoData, setGeoData] = useState<unknown>(null);
+  const [geoError, setGeoError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
-      .then(r => r.json()).then(setGeoData);
+    fetch("/countries.geojson")
+      .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+      .then(setGeoData)
+      .catch(() => setGeoError("Impossible de charger les frontières"));
   }, []);
 
-  const valueMap: Record<string, number> = {};
-  data.forEach(d => { if (typeof d[indicator] === "number") valueMap[d.iso3] = d[indicator] as number; });
-  const values = Object.values(valueMap).sort((a, b) => a - b);
+  const valueMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    data.forEach((d) => { if (typeof d[indicator] === "number") map[d.iso3] = d[indicator] as number; });
+    return map;
+  }, [data, indicator]);
+
+  const yearMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    const yearKey = `${indicator}_year`;
+    data.forEach((d) => {
+      if (typeof d[yearKey] === "string") map[d.iso3] = d[yearKey] as string;
+    });
+    return map;
+  }, [data, indicator]);
+
+  const values = useMemo(() => Object.values(valueMap).sort((a, b) => a - b), [valueMap]);
 
   const thresholds = useMemo(() => {
     if (values.length === 0) return [0, 0, 0, 0, 0];
@@ -51,7 +74,7 @@ export default function Map({ data, indicator, showCables }: Props) {
     return t;
   }, [values]);
 
-  const style = (feature: unknown): PathOptions => {
+  const style = useCallback((feature: unknown): PathOptions => {
     const props = (feature as { properties?: Record<string, unknown> })?.properties;
     const iso3 = getIso3(props);
     const value = iso3 ? valueMap[iso3] : undefined;
@@ -59,20 +82,18 @@ export default function Map({ data, indicator, showCables }: Props) {
       fillColor: value !== undefined ? getQuantileColor(value, thresholds) : "#d4d4d4",
       weight: 1, opacity: 1, color: "#cccccc", fillOpacity: 0.85,
     };
-  };
+  }, [valueMap, thresholds]);
 
-  const onEachFeature = (feature: unknown, layer: L.Layer) => {
+  const onEachFeature = useCallback((feature: unknown, layer: L.Layer) => {
     const props = (feature as { properties?: Record<string, unknown> })?.properties;
     const iso3 = getIso3(props);
     const name = (props?.ADMIN || props?.name || "") as string;
     const value = iso3 ? valueMap[iso3] : undefined;
-    const formatted = value !== undefined
-      ? value >= 1e6 ? `${(value / 1e6).toFixed(1)}M`
-      : value >= 1e3 ? `${(value / 1e3).toFixed(0)}k`
-      : value.toFixed(1)
-      : "N/A";
-    layer.bindTooltip(`${name}: ${formatted}`, { sticky: true });
-  };
+    const year = iso3 ? yearMap[iso3] : undefined;
+    const formatted = value !== undefined ? fmt(value) : "N/A";
+    const yearStr = year ? ` (${year})` : "";
+    layer.bindTooltip(`${name}: ${formatted}${yearStr}`, { sticky: true });
+  }, [valueMap, yearMap]);
 
   return (
     <>
@@ -82,6 +103,11 @@ export default function Map({ data, indicator, showCables }: Props) {
         zoomControl={true} scrollWheelZoom={true}
       >
         <NoWrapTileLayer />
+        {geoError && (
+          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", background: "white", padding: 16, borderRadius: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.15)", zIndex: 2000 }}>
+            {geoError}
+          </div>
+        )}
         {(geoData as boolean) && <GeoJSON data={geoData as GeoJSON.GeoJsonObject} style={style} onEachFeature={onEachFeature} />}
         <CableLayer visible={showCables} />
       </MapContainer>
