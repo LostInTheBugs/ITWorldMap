@@ -1,33 +1,65 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import type L from "leaflet";
 import MapPanel from "./MapPanel";
 import type { CountryData } from "../data/types";
+
+export type MapMode = "single" | "dual" | "ratio";
 
 interface Props {
   data: CountryData[];
   indicatorA: string;
   labelA: string;
+  shortA: string;
   indicatorB: string;
   labelB: string;
+  shortB: string;
   showCables: boolean;
-  split: boolean;
+  mode: MapMode;
 }
 
-export default function Map({ data, indicatorA, labelA, indicatorB, labelB, showCables, split }: Props) {
+export default function Map({
+  data, indicatorA, labelA, shortA, indicatorB, labelB, shortB, showCables, mode,
+}: Props) {
   const [geoData, setGeoData] = useState<GeoJSON.GeoJsonObject | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
   const syncGroup = useRef<L.Map[]>([]);
 
-  // Fetch borders once, shared by both panels (14 MB file — never load twice)
   useEffect(() => {
     fetch("/countries.geojson")
       .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
       .then(setGeoData)
       .catch(() => setGeoError("Impossible de charger les frontières"));
   }, []);
+  // Note: no manual reset of syncGroup — SyncController registers/unregisters
+  // each map itself. Resetting here would wipe the group AFTER children mount.
 
-  // Reset sync group each time we toggle split, to avoid stale map refs
-  useEffect(() => { syncGroup.current = []; }, [split]);
+  // Value accessors
+  const valueA = useMemo(() => (d: CountryData) => {
+    const v = d[indicatorA];
+    return typeof v === "number" ? v : undefined;
+  }, [indicatorA]);
+
+  const valueB = useMemo(() => (d: CountryData) => {
+    const v = d[indicatorB];
+    return typeof v === "number" ? v : undefined;
+  }, [indicatorB]);
+
+  const valueRatio = useMemo(() => (d: CountryData) => {
+    const a = d[indicatorA];
+    const b = d[indicatorB];
+    if (typeof a === "number" && typeof b === "number" && b !== 0) return a / b;
+    return undefined;
+  }, [indicatorA, indicatorB]);
+
+  const yearA = useMemo(() => (d: CountryData) => {
+    const y = d[`${indicatorA}_year`];
+    return typeof y === "string" ? y : undefined;
+  }, [indicatorA]);
+
+  const yearB = useMemo(() => (d: CountryData) => {
+    const y = d[`${indicatorB}_year`];
+    return typeof y === "string" ? y : undefined;
+  }, [indicatorB]);
 
   if (geoError) {
     return (
@@ -39,27 +71,33 @@ export default function Map({ data, indicatorA, labelA, indicatorB, labelB, show
     );
   }
 
+  const dual = mode === "dual";
+
   return (
     <div style={{ position: "fixed", inset: 0, display: "flex" }}>
       <div style={{ flex: 1, position: "relative" }}>
         <MapPanel
           data={data}
-          indicator={indicatorA}
-          label={labelA}
+          label={mode === "ratio" ? `${shortA} / ${shortB}` : labelA}
+          valueFn={mode === "ratio" ? valueRatio : valueA}
+          yearFn={mode === "ratio" ? undefined : yearA}
           showCables={showCables}
           geoData={geoData}
-          syncGroup={split ? syncGroup : undefined}
+          syncGroup={dual ? syncGroup : undefined}
+          showZoomControl={true}
         />
       </div>
-      {split && (
+      {dual && (
         <div style={{ flex: 1, position: "relative", borderLeft: "3px solid #fff" }}>
           <MapPanel
             data={data}
-            indicator={indicatorB}
             label={labelB}
+            valueFn={valueB}
+            yearFn={yearB}
             showCables={showCables}
             geoData={geoData}
             syncGroup={syncGroup}
+            showZoomControl={false}
           />
         </div>
       )}

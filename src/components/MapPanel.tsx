@@ -9,11 +9,13 @@ import type { CountryData } from "../data/types";
 
 interface Props {
   data: CountryData[];
-  indicator: string;
   label: string;
+  valueFn: (d: CountryData) => number | undefined;
+  yearFn?: (d: CountryData) => string | undefined;
   showCables: boolean;
   geoData: GeoJSON.GeoJsonObject | null;
   syncGroup?: React.MutableRefObject<L.Map[]>;
+  showZoomControl?: boolean;
 }
 
 const NAME_TO_ISO3: Record<string, string> = {
@@ -44,29 +46,23 @@ function fmt(n: number): string {
   if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
   if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
   if (n >= 1e3) return `${(n / 1e3).toFixed(0)}k`;
+  if (n < 1 && n > 0) return n.toPrecision(2);
   return n.toFixed(1);
 }
 
 /**
  * Leaflet caches its container size at init. When the panel shrinks (e.g. going
- * from full-width to half-width in split mode) or the window resizes, the map
- * keeps its old dimensions and renders the world at the wrong scale. Observing
- * the container and calling invalidateSize() fixes the mismatch.
+ * from full-width to half-width) or the window resizes, the map keeps its old
+ * dimensions. Observing the container and calling invalidateSize() fixes it.
  */
 function ResizeController() {
   const map = useMap();
   useEffect(() => {
     const container = map.getContainer();
-    // Recompute once on mount (covers the split toggle) after layout settles.
     const raf = requestAnimationFrame(() => map.invalidateSize({ animate: false }));
-    const observer = new ResizeObserver(() => {
-      map.invalidateSize({ animate: false });
-    });
+    const observer = new ResizeObserver(() => map.invalidateSize({ animate: false }));
     observer.observe(container);
-    return () => {
-      cancelAnimationFrame(raf);
-      observer.disconnect();
-    };
+    return () => { cancelAnimationFrame(raf); observer.disconnect(); };
   }, [map]);
   return null;
 }
@@ -76,13 +72,15 @@ function SyncController({ syncGroup }: { syncGroup?: React.MutableRefObject<L.Ma
   const map = useMap();
   useEffect(() => {
     if (!syncGroup) return;
-    syncGroup.current.push(map);
+    const group = syncGroup.current;
+    group.push(map);
+    const self = map as L.Map & { _syncing?: boolean };
+
     const propagate = () => {
-      const self = map as L.Map & { _syncing?: boolean };
       if (self._syncing) return;
       const c = map.getCenter();
       const z = map.getZoom();
-      syncGroup.current.forEach((other) => {
+      group.forEach((other) => {
         if (other === map) return;
         const o = other as L.Map & { _syncing?: boolean };
         o._syncing = true;
@@ -90,32 +88,40 @@ function SyncController({ syncGroup }: { syncGroup?: React.MutableRefObject<L.Ma
         o._syncing = false;
       });
     };
+
     map.on("move", propagate);
     map.on("zoom", propagate);
     return () => {
       map.off("move", propagate);
       map.off("zoom", propagate);
-      if (syncGroup.current) syncGroup.current = syncGroup.current.filter((m) => m !== map);
+      const idx = group.indexOf(map);
+      if (idx !== -1) group.splice(idx, 1);
     };
   }, [map, syncGroup]);
   return null;
 }
 
-export default function MapPanel({ data, indicator, label, showCables, geoData, syncGroup }: Props) {
+export default function MapPanel({
+  data, label, valueFn, yearFn, showCables, geoData, syncGroup, showZoomControl = true,
+}: Props) {
   const valueMap = useMemo(() => {
     const map: Record<string, number> = {};
-    data.forEach((d) => { if (typeof d[indicator] === "number") map[d.iso3] = d[indicator] as number; });
+    data.forEach((d) => {
+      const v = valueFn(d);
+      if (typeof v === "number" && isFinite(v)) map[d.iso3] = v;
+    });
     return map;
-  }, [data, indicator]);
+  }, [data, valueFn]);
 
   const yearMap = useMemo(() => {
     const map: Record<string, string> = {};
-    const yearKey = `${indicator}_year`;
+    if (!yearFn) return map;
     data.forEach((d) => {
-      if (typeof d[yearKey] === "string") map[d.iso3] = d[yearKey] as string;
+      const y = yearFn(d);
+      if (typeof y === "string") map[d.iso3] = y;
     });
     return map;
-  }, [data, indicator]);
+  }, [data, yearFn]);
 
   const values = useMemo(() => Object.values(valueMap).sort((a, b) => a - b), [valueMap]);
 
@@ -148,15 +154,14 @@ export default function MapPanel({ data, indicator, label, showCables, geoData, 
     layer.bindTooltip(`${name}: ${formatted}${yearStr} — ${label}`, { sticky: true });
   }, [valueMap, yearMap, label]);
 
-  // Unique key forces GeoJSON layer to restyle when indicator changes
-  const geoKey = `${indicator}-${thresholds.join(",")}`;
+  const geoKey = `${label}-${thresholds.join(",")}`;
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       <MapContainer
         center={[20, 0]} zoom={2}
         style={{ height: "100%", width: "100%", background: "#f0f0f0" }}
-        zoomControl={true} scrollWheelZoom={true}
+        zoomControl={showZoomControl} scrollWheelZoom={true}
       >
         <NoWrapTileLayer />
         <ResizeController />
