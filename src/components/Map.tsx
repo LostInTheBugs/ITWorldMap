@@ -15,10 +15,11 @@ interface Props {
   shortB: string;
   showCables: boolean;
   mode: MapMode;
+  t: (key: string, vars?: Record<string, string>) => string;
 }
 
 export default function Map({
-  data, indicatorA, labelA, shortA, indicatorB, labelB, shortB, showCables, mode,
+  data, indicatorA, labelA, shortA, indicatorB, labelB, shortB, showCables, mode, t,
 }: Props) {
   const [geoData, setGeoData] = useState<GeoJSON.GeoJsonObject | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
@@ -28,12 +29,9 @@ export default function Map({
     fetch("/countries.geojson")
       .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
       .then(setGeoData)
-      .catch(() => setGeoError("Impossible de charger les frontières"));
-  }, []);
-  // Note: no manual reset of syncGroup — SyncController registers/unregisters
-  // each map itself. Resetting here would wipe the group AFTER children mount.
+      .catch(() => setGeoError(t("map.geoerror")));
+  }, [t]);
 
-  // Value accessors
   const valueA = useMemo(() => (d: CountryData) => {
     const v = d[indicatorA];
     return typeof v === "number" ? v : undefined;
@@ -85,6 +83,7 @@ export default function Map({
           geoData={geoData}
           syncGroup={dual ? syncGroup : undefined}
           showZoomControl={true}
+          t={t}
         />
       </div>
       {dual && (
@@ -98,6 +97,7 @@ export default function Map({
             geoData={geoData}
             syncGroup={syncGroup}
             showZoomControl={false}
+            t={t}
           />
         </div>
       )}

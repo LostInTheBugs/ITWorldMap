@@ -16,6 +16,7 @@ interface Props {
   geoData: GeoJSON.GeoJsonObject | null;
   syncGroup?: React.MutableRefObject<L.Map[]>;
   showZoomControl?: boolean;
+  t: (key: string, vars?: Record<string, string>) => string;
 }
 
 const NAME_TO_ISO3: Record<string, string> = {
@@ -50,11 +51,6 @@ function fmt(n: number): string {
   return n.toFixed(1);
 }
 
-/**
- * Leaflet caches its container size at init. When the panel shrinks (e.g. going
- * from full-width to half-width) or the window resizes, the map keeps its old
- * dimensions. Observing the container and calling invalidateSize() fixes it.
- */
 function ResizeController() {
   const map = useMap();
   useEffect(() => {
@@ -67,7 +63,6 @@ function ResizeController() {
   return null;
 }
 
-/** Keeps multiple Leaflet maps in sync (pan/zoom). No-op when no syncGroup. */
 function SyncController({ syncGroup }: { syncGroup?: React.MutableRefObject<L.Map[]> }) {
   const map = useMap();
   useEffect(() => {
@@ -102,7 +97,7 @@ function SyncController({ syncGroup }: { syncGroup?: React.MutableRefObject<L.Ma
 }
 
 export default function MapPanel({
-  data, label, valueFn, yearFn, showCables, geoData, syncGroup, showZoomControl = true,
+  data, label, valueFn, yearFn, showCables, geoData, syncGroup, showZoomControl = true, t,
 }: Props) {
   const valueMap = useMemo(() => {
     const map: Record<string, number> = {};
@@ -149,10 +144,10 @@ export default function MapPanel({
     const name = (props?.ADMIN || props?.name || "") as string;
     const value = iso3 ? valueMap[iso3] : undefined;
     const year = iso3 ? yearMap[iso3] : undefined;
-    const formatted = value !== undefined ? fmt(value) : "N/A";
+    const formatted = value !== undefined ? fmt(value) : t("map.na");
     const yearStr = year ? ` (${year})` : "";
     layer.bindTooltip(`${name}: ${formatted}${yearStr} — ${label}`, { sticky: true });
-  }, [valueMap, yearMap, label]);
+  }, [valueMap, yearMap, label, t]);
 
   const geoKey = `${label}-${thresholds.join(",")}`;
 
@@ -171,7 +166,7 @@ export default function MapPanel({
         )}
         <CableLayer visible={showCables} />
       </MapContainer>
-      <ColorLegend palette={PALETTE} thresholds={thresholds} values={values} title={label} />
+      <ColorLegend palette={PALETTE} thresholds={thresholds} values={values} title={label} t={t} />
     </div>
   );
 }

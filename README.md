@@ -3,25 +3,44 @@
 [![GitHub tag](https://img.shields.io/github/v/tag/LostInTheBugs/ITWorldMap?label=version)](https://github.com/LostInTheBugs/ITWorldMap/tags)
 [![Deploy](https://github.com/LostInTheBugs/ITWorldMap/actions/workflows/deploy.yml/badge.svg)](https://github.com/LostInTheBugs/ITWorldMap/actions)
 
-Carte du monde interactive visualisant des indicateurs IT (Internet, IA) croisés avec des données socio-économiques (population, PIB, CO₂).
+> ⚠️ **Disclaimer**: This application is a **demo/test**. Data may contain errors or outdated values. **Do not use for decision-making purposes.**
 
-🌐 **Démo** : [itworldmap.cloudfr.net](https://itworldmap.cloudfr.net/)
+Interactive world map visualizing IT indicators (Internet, mobile, broadband, secure servers) crossed with socio-economic data (population, GDP, CO₂, electricity access).
 
-## 📦 Installation rapide (Docker)
+🌐 **Demo**: [itworldmap.cloudfr.net](https://itworldmap.cloudfr.net/)
+
+## 📊 Data Sources
+
+All indicators are sourced from the **World Bank API** ([api.worldbank.org](https://api.worldbank.org)).  
+Data vintage varies by country and indicator, ranging from **1990 to 2025** (most recent available year per country).
+Map tiles: **OpenStreetMap** contributors.
+
+| Category | Indicator | Source |
+|----------|-----------|--------|
+| 👥 Population | Total population | World Bank |
+| 💰 Economy | GDP per capita (US $) | World Bank |
+| 🏭 Environment | CO₂ emissions per capita | World Bank |
+| 🌐 Internet | Internet users (% pop.) | World Bank |
+| 📱 Mobile | Mobile subscriptions /100 pop. | World Bank |
+| 🛜 Broadband | Fixed broadband /100 pop. | World Bank |
+| ⚡ Electricity | Electricity access (%) | World Bank |
+| 🔒 Security | Secure servers /M pop. | World Bank |
+
+## 📦 Quick Install (Docker)
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/LostInTheBugs/ITWorldMap/main/install.sh | bash
 ```
 
-L'application sera accessible sur `http://localhost:3001`.
+The app will be available at `http://localhost:3001`.
 
-Variables d'environnement optionnelles :
+Optional environment variables:
 
 ```bash
 ITWM_DIR=/opt/itworldmap ITWM_PORT=8080 bash install.sh
 ```
 
-Ou manuellement :
+Or manually:
 
 ```bash
 git clone https://github.com/LostInTheBugs/ITWorldMap.git
@@ -29,45 +48,32 @@ cd ITWorldMap
 PORT=3001 docker compose up -d --build
 ```
 
-## 📊 Indicateurs
-
-| Catégorie | Indicateur | Source |
-|-----------|-----------|--------|
-| 👥 Population | Population totale | World Bank |
-| 💰 Économie | PIB par habitant ($ US) | World Bank |
-| 🏭 Environnement | Émissions CO₂ par habitant | World Bank |
-| 🌐 Internet | Utilisateurs Internet (% pop.) | World Bank |
-| 📱 Mobile | Abonnements mobiles /100 hab. | World Bank |
-| 🛜 Haut débit | Haut débit fixe /100 hab. | World Bank |
-| ⚡ Électricité | Accès électricité (%) | World Bank |
-| 🔒 Sécurité | Serveurs sécurisés /M hab. | World Bank |
-
-## 🛠️ Développement
+## 🛠️ Development
 
 ```bash
-npm install        # Installer les dépendances
-npm run dev        # Serveur local (http://localhost:5173)
-npm run build      # Build production
+npm install        # Install dependencies
+npm run dev        # Dev server (http://localhost:5173)
+npm run build      # Production build
 ```
 
-### Mise à jour des données
+### Updating data
 
 ```bash
 cd data
-python3 scripts/fetch_worldbank.py   # Récupère les données World Bank
-python3 scripts/merge_data.py        # Fusionne → src/data/indicators.json
+python3 scripts/fetch_worldbank.py   # Fetch World Bank data
+python3 scripts/merge_data.py        # Merge → src/data/indicators.json
 ```
 
-## 🐳 Déploiement Docker
+## 🐳 Docker Deployment
 
 ```bash
-# Build + lancement
+# Build + start
 PORT=3001 docker compose up -d --build
 
 # Logs
 docker logs itworldmap
 
-# Mise à jour
+# Update
 cd ITWorldMap
 git pull origin main
 PORT=3001 docker compose up -d --build
@@ -75,15 +81,16 @@ PORT=3001 docker compose up -d --build
 
 ## 🔖 Versioning
 
-| Changement | Version | Exemple |
-|---|---|---|
-| Nouvelle fonctionnalité | v1.x.0 | v1.0.0 → v1.1.0 |
-| Correction / amélioration | v1.0.x | v1.0.0 → v1.0.1 |
-| Refonte majeure | v2.0.0 | Sur décision |
+Format: **`YYYY.MM.NNN`** (year.month.increment)  
+Example: `2026.07.001` → July 2026, iteration 001.
 
-**Chaque release** :
-- Mettre à jour `<meta name="version" content="vX.Y.Z">` dans `index.html`
-- Créer un tag Git : `git tag -a vX.Y.Z -m "vX.Y.Z" && git push origin vX.Y.Z`
+Each release:
+- Update `<meta name="version" content="YYYY.MM.NNN">` in `index.html`
+- Create a Git tag: `git tag -a YYYY.MM.NNN -m "YYYY.MM.NNN" && git push origin YYYY.MM.NNN`
+
+## 🌐 Internationalization
+
+The app supports **French** (default) and **English**. Use the language selector in the top-left panel.
 
 ## 📁 Structure
 
@@ -91,27 +98,34 @@ PORT=3001 docker compose up -d --build
 ITWorldMap/
 ├── src/
 │   ├── components/
-│   │   ├── Map.tsx              # Carte Leaflet choropleth
-│   │   ├── ColorLegend.tsx      # Légende de couleur
-│   │   └── ScatterPlot.tsx      # Nuage de points D3.js
+│   │   ├── Map.tsx              # Map orchestrator (single/dual/ratio modes)
+│   │   ├── MapPanel.tsx         # Individual map panel
+│   │   ├── ColorLegend.tsx      # Color legend with quantiles
+│   │   └── ScatterPlot.tsx      # D3.js scatter plot with Pearson correlation
+│   ├── i18n/
+│   │   ├── translations.ts      # FR/EN translation strings
+│   │   └── LangContext.tsx       # Language context provider
 │   ├── data/
-│   │   └── indicators.json      # Données par pays (ISO3)
-│   ├── App.tsx                  # Layout principal
-│   └── main.tsx                 # Point d'entrée
+│   │   ├── indicators.json      # Country data (ISO3)
+│   │   └── types.ts             # Shared TypeScript types
+│   ├── App.tsx                  # Main layout + controls
+│   └── main.tsx                 # Entry point
 ├── data/
-│   ├── scripts/                 # Scripts ETL Python
-│   │   ├── fetch_worldbank.py   # API World Bank
-│   │   └── merge_data.py        # Fusion → src/data/
-│   ├── raw/                     # Données brutes (cachées)
-│   └── processed/               # Données normalisées
+│   ├── scripts/                 # Python ETL scripts
+│   │   ├── fetch_worldbank.py   # World Bank API fetcher
+│   │   └── merge_data.py        # Merge → src/data/
+│   ├── raw/                     # Raw API responses (gitignored)
+│   └── processed/               # Normalized data (gitignored)
+├── public/
+│   └── countries.geojson        # Country borders
 ├── .github/workflows/deploy.yml # CI/CD GitHub Pages
-├── Dockerfile                   # Build multi-stage Node + Nginx
-├── docker-compose.yml           # Service Docker (port 3001)
-├── nginx.conf                   # Configuration Nginx (SPA fallback)
-├── install.sh                   # Script d'installation one-liner
+├── Dockerfile                   # Multi-stage Node + Nginx
+├── docker-compose.yml           # Docker service (port 3001)
+├── nginx.conf                   # Nginx config (SPA fallback, security headers)
+├── install.sh                   # One-liner install script
 └── vite.config.ts
 ```
 
-## 📝 Licence
+## 📝 License
 
 MIT

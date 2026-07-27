@@ -4,6 +4,7 @@ interface Props {
   values: number[];
   title?: string;
   hasNoData?: boolean;
+  t: (key: string) => string;
 }
 
 function fmt(n: number): string {
@@ -13,7 +14,7 @@ function fmt(n: number): string {
   return n.toFixed(1);
 }
 
-export default function ColorLegend({ palette, thresholds, values, title, hasNoData = true }: Props) {
+export default function ColorLegend({ palette, thresholds, values, title, hasNoData = true, t }: Props) {
   const min = values.length > 0 ? values[0] : 0;
   const max = values.length > 0 ? values[values.length - 1] : 1;
 
@@ -41,7 +42,7 @@ export default function ColorLegend({ palette, thresholds, values, title, hasNoD
           maxWidth: 200,
         }}
       >
-        {title ? title : "Échelle"} <span style={{ fontWeight: 400 }}>(quantiles)</span>
+        {title ? title : t("map.legend.title")} <span style={{ fontWeight: 400 }}>{t("map.legend.quantiles")}</span>
       </div>
       <div style={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
         {palette.map((color, i) => {
@@ -59,7 +60,7 @@ export default function ColorLegend({ palette, thresholds, values, title, hasNoD
         {hasNoData && (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: 6 }}>
             <div style={{ width: 30, height: 14, borderRadius: 2, backgroundColor: "#d4d4d4" }} />
-            <span style={{ fontSize: 9, color: "#6b7280", marginTop: 2 }}>N/A</span>
+            <span style={{ fontSize: 9, color: "#6b7280", marginTop: 2 }}>{t("map.legend.na")}</span>
           </div>
         )}
       </div>

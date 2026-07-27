@@ -8,6 +8,7 @@ interface Props {
   yIndicator: string;
   xLabel: string;
   yLabel: string;
+  t: (key: string) => string;
 }
 
 function fmt(n: number): string {
@@ -17,13 +18,12 @@ function fmt(n: number): string {
   return n.toFixed(1);
 }
 
-/** Use a log scale when values are strictly positive and span >3 orders of magnitude. */
 function pickScale(extent: [number, number]) {
   const useLog = extent[0] > 0 && extent[1] / extent[0] > 1000;
   return useLog ? d3.scaleLog() : d3.scaleLinear();
 }
 
-export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLabel }: Props) {
+export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLabel, t }: Props) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLab
         .attr("text-anchor", "middle")
         .attr("font-size", "10")
         .attr("fill", "#9ca3af")
-        .text("Pas de données");
+        .text(t("scatter.nodata"));
       return;
     }
 
@@ -61,7 +61,6 @@ export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLab
     const x = pickScale(xExtent).domain(xExtent).range([0, width]).nice();
     const y = pickScale(yExtent).domain(yExtent).range([height, 0]).nice();
 
-    // Pearson correlation (on the valid pairs)
     const xs = valid.map((d) => d[xIndicator]);
     const ys = valid.map((d) => d[yIndicator]);
     const mx = d3.mean(xs)!;
@@ -108,13 +107,12 @@ export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLab
       .attr("text-anchor", "middle").attr("font-size", "9").attr("fill", "#6b7280")
       .text(yLabel);
 
-    // correlation badge
     g.append("text")
       .attr("x", width).attr("y", 2)
       .attr("text-anchor", "end").attr("font-size", "9").attr("font-weight", "600")
       .attr("fill", Math.abs(r) > 0.5 ? "#2563eb" : "#9ca3af")
       .text(`r = ${r.toFixed(2)} (n=${valid.length})`);
-  }, [data, xIndicator, yIndicator, xLabel, yLabel]);
+  }, [data, xIndicator, yIndicator, xLabel, yLabel, t]);
 
   return (
     <div style={{ background: "rgba(255,255,255,0.9)", borderRadius: 8, padding: 8 }}>
