@@ -36,6 +36,19 @@ PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 RAW_DIR.mkdir(parents=True, exist_ok=True)
 
 
+def fetch_real_countries() -> set[str]:
+    """Fetch the set of real country ISO3 codes (excluding regional aggregates)."""
+    url = "https://api.worldbank.org/v2/country?format=json&per_page=400"
+    req = urllib.request.Request(url, headers={"User-Agent": "ITWorldMap/1.0"})
+    with urllib.request.urlopen(req) as resp:
+        data = json.loads(resp.read())
+    return {
+        c["id"] for c in data[1]
+        if c.get("region", {}).get("value") != "Aggregates"
+        and c.get("id") and len(c["id"]) == 3
+    }
+
+
 def fetch_indicator(code: str, name: str) -> dict:
     """Fetch latest available value for each country from World Bank API."""
     url = (
@@ -68,29 +81,40 @@ def fetch_indicator(code: str, name: str) -> dict:
             if iso3 not in results or year > results[iso3]["year"]:
                 results[iso3] = {"value": value, "year": year}
 
-    return {k: v["value"] for k, v in results.items()}
+    if not results:
+        print(f"  ⚠️  AUCUNE donnée pour {name} ({code}) — indicateur à vérifier/retirer")
+
+    # Return both value and year
+    return {k: {"value": v["value"], "year": v["year"]} for k, v in results.items()}
 
 
 def main():
+    real_countries = fetch_real_countries()
+    print(f"Real countries from World Bank: {len(real_countries)}")
+
     output = {}
 
     for name, code in INDICATORS.items():
-        values = fetch_indicator(code, name)
-        for iso3, value in values.items():
+        results = fetch_indicator(code, name)
+        for iso3, entry in results.items():
             if iso3 not in output:
                 output[iso3] = {"iso3": iso3}
-            output[iso3][name] = value
+            output[iso3][name] = entry["value"]
+            output[iso3][f"{name}_year"] = entry["year"]
 
-    # Keep only countries with core indicators available (others are optional)
+    # Keep only real countries with core indicators available
     countries = [
-        entry for entry in output.values() if all(k in entry for k in CORE_INDICATORS)
+        entry for entry in output.values()
+        if all(k in entry for k in CORE_INDICATORS)
+        and entry["iso3"] in real_countries
     ]
 
     out_path = PROCESSED_DIR / "worldbank.json"
     with open(out_path, "w") as f:
         json.dump(countries, f, indent=2)
 
-    print(f"\nDone: {len(countries)} countries → {out_path}")
+    excluded = len(output) - len(countries)
+    print(f"\nDone: {len(countries)} countries (+ {excluded} aggregates excluded) → {out_path}")
 
 
 if __name__ == "__main__":
