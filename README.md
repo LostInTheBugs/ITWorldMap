@@ -32,7 +32,7 @@ Map tiles: **OpenStreetMap** contributors.
 curl -sSL https://raw.githubusercontent.com/LostInTheBugs/ITWorldMap/main/install.sh | bash
 ```
 
-The app will be available at `http://localhost:3001`.
+The app will be available at `http://localhost:8003`.
 
 Optional environment variables:
 
@@ -45,7 +45,7 @@ Or manually:
 ```bash
 git clone https://github.com/LostInTheBugs/ITWorldMap.git
 cd ITWorldMap
-PORT=3001 docker compose up -d --build
+PORT=8003 docker compose up -d --build
 ```
 
 ## 🛠️ Development
@@ -67,8 +67,8 @@ python3 scripts/merge_data.py        # Merge → src/data/indicators.json
 ## 🐳 Docker Deployment
 
 ```bash
-# Build + start
-PORT=3001 docker compose up -d --build
+# Build + start (default port: 8003, overridable via PORT env var)
+PORT=8003 docker compose up -d --build
 
 # Logs
 docker logs itworldmap
@@ -76,16 +76,27 @@ docker logs itworldmap
 # Update
 cd ITWorldMap
 git pull origin main
-PORT=3001 docker compose up -d --build
+PORT=8003 docker compose up -d --build
 ```
+
+## ⚙️ Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | `8003` | Host port for the Docker service (overridable) |
+| `ITWM_DIR` | `./itworldmap` | Install directory (install.sh) |
+| `ITWM_PORT` | `8003` | Host port (install.sh) |
+
+Dependencies: Docker, Docker Compose. For development: Node.js 20+, npm.
 
 ## 🔖 Versioning
 
 Format: **`YYYY.MM.NNN`** (year.month.increment)  
-Example: `2026.07.001` → July 2026, iteration 001.
+Current version: **2026.08.001**  
+Releases: [github.com/LostInTheBugs/ITWorldMap/releases](https://github.com/LostInTheBugs/ITWorldMap/releases)
 
 Each release:
-- Update `<meta name="version" content="YYYY.MM.NNN">` in `index.html`
+- Update `VERSION` file and `<meta name="version" content="YYYY.MM.NNN">` in `index.html`
 - Create a Git tag: `git tag -a YYYY.MM.NNN -m "YYYY.MM.NNN" && git push origin YYYY.MM.NNN`
 
 ## 🌐 Internationalization
@@ -120,9 +131,12 @@ ITWorldMap/
 │   └── countries.geojson        # Country borders
 ├── .github/workflows/deploy.yml # CI/CD GitHub Pages
 ├── Dockerfile                   # Multi-stage Node + Nginx
-├── docker-compose.yml           # Docker service (port 3001)
+├── docker-compose.yml           # Docker service (port 8003)
+├── .env.example                 # Environment variables template
 ├── nginx.conf                   # Nginx config (SPA fallback, security headers)
 ├── install.sh                   # One-liner install script
+├── VERSION                      # Current version (2026.08.001)
+├── CHANGELOG.md                 # Release history
 └── vite.config.ts
 ```
 

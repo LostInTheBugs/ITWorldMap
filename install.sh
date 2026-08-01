@@ -3,11 +3,11 @@
 # Usage : curl -sSL https://raw.githubusercontent.com/LostInTheBugs/ITWorldMap/main/install.sh | bash
 # Variables d'environnement :
 #   ITWM_DIR  : répertoire d'installation (défaut : ./itworldmap)
-#   ITWM_PORT : port d'écoute (défaut : 3001)
+#   ITWM_PORT : port d'écoute (défaut : 8003)
 set -e
 
 APP_DIR="${ITWM_DIR:-$(pwd)/itworldmap}"
-PORT="${ITWM_PORT:-3001}"
+PORT="${ITWM_PORT:-8003}"
 
 echo "🌍 ITWorldMap — Installation"
 echo "   Dossier : $APP_DIR"
