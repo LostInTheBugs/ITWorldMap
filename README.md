@@ -140,6 +140,21 @@ ITWorldMap/
 └── vite.config.ts
 ```
 
+## Development cost (LLM)
+
+This project was built entirely through AI-assisted sessions (Hermes Agent, deepseek-v4-pro / deepseek-v4-flash). Usage so far (cumulative as of 2026-08-02):
+
+| Metric | Value |
+|---|---|
+| Input tokens | 639 267 |
+| Output tokens | 213 262 |
+| **Total (input + output)** | **852 529** |
+| Cache read (reused at reduced price) | 133 015 552 |
+| API calls | 812 |
+| **Estimated cost** | **≈ 0.95 USD** |
+
+Full breakdown: [TOKENS.md](TOKENS.md).
+
 ## 📝 License
 
 MIT
