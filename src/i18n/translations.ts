@@ -20,6 +20,9 @@ export const translations: Record<Lang, Record<string, string>> = {
     "app.cables": "🔌 Câbles sous-marins",
     "app.scatter.title": "Corrélation : {x} vs. {y}",
     "app.lang": "Langue",
+    "app.resetView": "Réinitialiser la vue",
+    "app.collapse": "Réduire le panneau",
+    "app.expand": "Agrandir le panneau",
 
     // Disclaimer
     "disclaimer.text": "⚠️ Cette application est une démo/test. Les données peuvent contenir des erreurs ou des valeurs obsolètes. Ne pas utiliser à des fins de décision.",
@@ -31,6 +34,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
     // Map
     "map.geoerror": "Impossible de charger les frontières",
+    "map.loading": "Chargement de la carte…",
     "map.legend.title": "Échelle",
     "map.legend.quantiles": "(quantiles)",
     "map.legend.na": "N/A",
@@ -78,6 +82,9 @@ export const translations: Record<Lang, Record<string, string>> = {
     "app.cables": "🔌 Submarine cables",
     "app.scatter.title": "Correlation: {x} vs. {y}",
     "app.lang": "Language",
+    "app.resetView": "Reset view",
+    "app.collapse": "Collapse panel",
+    "app.expand": "Expand panel",
 
     // Disclaimer
     "disclaimer.text": "⚠️ This application is a demo/test. Data may contain errors or outdated values. Do not use for decision-making purposes.",
@@ -89,6 +96,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
     // Map
     "map.geoerror": "Unable to load country borders",
+    "map.loading": "Loading map…",
     "map.legend.title": "Scale",
     "map.legend.quantiles": "(quantiles)",
     "map.legend.na": "N/A",

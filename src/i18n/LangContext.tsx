@@ -14,8 +14,8 @@ const LangContext = createContext<LangContextType>({
   t: (key) => key,
 });
 
-export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>("fr");
+export function LangProvider({ children, initialLang = "fr" }: { children: ReactNode; initialLang?: Lang }) {
+  const [lang, setLang] = useState<Lang>(initialLang);
 
   const t = useCallback(
     (key: string, vars?: Record<string, string>) => translate(lang, key, vars),

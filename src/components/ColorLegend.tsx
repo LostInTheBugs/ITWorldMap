@@ -1,3 +1,5 @@
+import { fmt } from "../utils/format";
+
 interface Props {
   palette: string[];
   thresholds: number[];
@@ -5,13 +7,6 @@ interface Props {
   title?: string;
   hasNoData?: boolean;
   t: (key: string) => string;
-}
-
-function fmt(n: number): string {
-  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}k`;
-  return n.toFixed(1);
 }
 
 export default function ColorLegend({ palette, thresholds, values, title, hasNoData = true, t }: Props) {
@@ -48,8 +43,9 @@ export default function ColorLegend({ palette, thresholds, values, title, hasNoD
         {palette.map((color, i) => {
           const lo = i === 0 ? min : thresholds[i - 1];
           const hi = i === palette.length - 1 ? max : thresholds[i];
+          const rangeLabel = i === 0 ? `<${fmt(hi)}` : i === palette.length - 1 ? `>${fmt(lo)}` : `${fmt(lo)}–${fmt(hi)}`;
           return (
-            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center" }} title={rangeLabel}>
               <div style={{ width: 30, height: 14, borderRadius: 2, backgroundColor: color }} />
               <span style={{ fontSize: 9, color: "#6b7280", marginTop: 2, whiteSpace: "nowrap" }}>
                 {i === 0 ? `<${fmt(hi)}` : i === palette.length - 1 ? `>${fmt(lo)}` : fmt(lo)}

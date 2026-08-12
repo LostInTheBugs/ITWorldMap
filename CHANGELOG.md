@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026.08.002 (2026-08-12)
+
+### Fixed
+- GeoJSON des frontières simplifié (14,6 Mo → 870 Ko) via mapshaper `-simplify 8% keep-shapes` ; MIME `application/geo+json` + gzip nginx (les `.geojson` étaient servis en octet-stream : non compressés, non cachés par Cloudflare)
+- Contrôle de zoom Leaflet recouvert par le panneau → déplacé en haut à droite
+- Refetch du GeoJSON (14 Mo) à chaque changement de langue → fetch une seule fois
+- Corrélation du scatter calculée sur les valeurs affichées (log si axe log) au lieu des valeurs brutes
+- Dockerfile : node:20 (EOL) → node:22-alpine ; workflow Pages : node 22
+
+### Added
+- État synchronisé dans l'URL (`?mode=&a=&b=&x=&y=&cables=&lang=`) : liens partageables, état conservé au refresh
+- Rang mondial dans les tooltips (`Mali: 25.2M (2025) · #57/214`)
+- Bouton réinitialiser la vue (🌐), panneaux repliables (état persisté en localStorage)
+- Disclaimer persisté (localStorage)
+- Overlay « Chargement de la carte… » pendant le chargement des frontières
+- Tooltip de plage sur la légende quantiles ; footer sources déplacé au-dessus de la légende
+
+### Changed
+- `strict: true` dans tsconfig.app.json
+- Dépendances mortes supprimées (papaparse, tailwindcss/@tailwindcss/vite) ; assets morts supprimés
+- `fmt()` mutualisé dans `src/utils/format.ts` ; `aria-pressed` sur les boutons de mode
+- README : section Features ajoutée sous l'intro
+
 ## 2026.08.001 (2026-08-01)
 
 ### Changed

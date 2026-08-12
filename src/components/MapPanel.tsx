@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useCallback } from "react";
-import { MapContainer, GeoJSON, useMap } from "react-leaflet";
+import { MapContainer, GeoJSON, useMap, ZoomControl } from "react-leaflet";
 import type { PathOptions } from "leaflet";
 import type L from "leaflet";
 import NoWrapTileLayer from "./NoWrapTileLayer";
 import CableLayer from "./CableLayer";
 import ColorLegend from "./ColorLegend";
 import type { CountryData } from "../data/types";
+import { fmt } from "../utils/format";
 
 interface Props {
   data: CountryData[];
@@ -16,6 +17,7 @@ interface Props {
   geoData: GeoJSON.GeoJsonObject | null;
   syncGroup?: React.MutableRefObject<L.Map[]>;
   showZoomControl?: boolean;
+  resetToken?: number;
   t: (key: string, vars?: Record<string, string>) => string;
 }
 
@@ -43,14 +45,6 @@ function getQuantileColor(value: number, thresholds: number[]): string {
   return PALETTE[PALETTE.length - 1];
 }
 
-function fmt(n: number): string {
-  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}k`;
-  if (n < 1 && n > 0) return n.toPrecision(2);
-  return n.toFixed(1);
-}
-
 function ResizeController() {
   const map = useMap();
   useEffect(() => {
@@ -60,6 +54,14 @@ function ResizeController() {
     observer.observe(container);
     return () => { cancelAnimationFrame(raf); observer.disconnect(); };
   }, [map]);
+  return null;
+}
+
+function ViewResetter({ token }: { token: number }) {
+  const map = useMap();
+  useEffect(() => {
+    if (token > 0) map.setView([20, 0], 2, { animate: false });
+  }, [token, map]);
   return null;
 }
 
@@ -97,7 +99,7 @@ function SyncController({ syncGroup }: { syncGroup?: React.MutableRefObject<L.Ma
 }
 
 export default function MapPanel({
-  data, label, valueFn, yearFn, showCables, geoData, syncGroup, showZoomControl = true, t,
+  data, label, valueFn, yearFn, showCables, geoData, syncGroup, showZoomControl = true, resetToken = 0, t,
 }: Props) {
   const valueMap = useMemo(() => {
     const map: Record<string, number> = {};
@@ -119,6 +121,14 @@ export default function MapPanel({
   }, [data, yearFn]);
 
   const values = useMemo(() => Object.values(valueMap).sort((a, b) => a - b), [valueMap]);
+
+  const rankMap = useMemo(() => {
+    const ranks: Record<string, number> = {};
+    Object.entries(valueMap)
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([iso3], i) => { ranks[iso3] = i + 1; });
+    return ranks;
+  }, [valueMap]);
 
   const thresholds = useMemo(() => {
     if (values.length === 0) return [0, 0, 0, 0, 0];
@@ -144,10 +154,12 @@ export default function MapPanel({
     const name = (props?.ADMIN || props?.name || "") as string;
     const value = iso3 ? valueMap[iso3] : undefined;
     const year = iso3 ? yearMap[iso3] : undefined;
+    const rank = iso3 ? rankMap[iso3] : undefined;
     const formatted = value !== undefined ? fmt(value) : t("map.na");
     const yearStr = year ? ` (${year})` : "";
-    layer.bindTooltip(`${name}: ${formatted}${yearStr} — ${label}`, { sticky: true });
-  }, [valueMap, yearMap, label, t]);
+    const rankStr = rank ? ` · #${rank}/${values.length}` : "";
+    layer.bindTooltip(`${name}: ${formatted}${yearStr}${rankStr} — ${label}`, { sticky: true });
+  }, [valueMap, yearMap, rankMap, values.length, label, t]);
 
   const geoKey = `${label}-${thresholds.join(",")}`;
 
@@ -156,11 +168,13 @@ export default function MapPanel({
       <MapContainer
         center={[20, 0]} zoom={2}
         style={{ height: "100%", width: "100%", background: "#f0f0f0" }}
-        zoomControl={showZoomControl} scrollWheelZoom={true}
+        zoomControl={false} scrollWheelZoom={true}
       >
         <NoWrapTileLayer />
         <ResizeController />
         <SyncController syncGroup={syncGroup} />
+        {showZoomControl && <ZoomControl position="topright" />}
+        <ViewResetter token={resetToken} />
         {geoData && (
           <GeoJSON key={geoKey} data={geoData} style={style} onEachFeature={onEachFeature} />
         )}

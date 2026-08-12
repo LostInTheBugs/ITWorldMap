@@ -9,6 +9,17 @@ Interactive world map visualizing IT indicators (Internet, mobile, broadband, se
 
 🌐 **Demo**: [itworldmap.cloudfr.net](https://itworldmap.cloudfr.net/)
 
+## ✨ Features
+
+- 🌍 Choropleth map of **8 indicators** (population, GDP/capita, CO₂/capita, Internet users, mobile, broadband, electricity access, secure servers) — 214 countries, World Bank data (vintage up to 2025)
+- 🗺️ **3 display modes**: single map · dual synchronized maps · ratio of two indicators
+- 🔌 Submarine cable layer (on/off)
+- 📊 Scatter plot with auto log-scale and Pearson correlation (computed on displayed values)
+- 🔗 **Shareable URL state** (`?mode=&a=&b=&x=&y=&cables=&lang=`) — reload keeps your view
+- 🖱️ Country tooltips with value, data year and world rank (`#57/214`)
+- 🌐 Reset view button, collapsible panels (persisted)
+- 🌍 FR/EN internationalization
+
 ## 📊 Data Sources
 
 All indicators are sourced from the **World Bank API** ([api.worldbank.org](https://api.worldbank.org)).  

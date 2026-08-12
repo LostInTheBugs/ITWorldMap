@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import type { CountryData } from "../data/types";
+import { fmt } from "../utils/format";
 
 interface Props {
   data: CountryData[];
@@ -9,13 +10,6 @@ interface Props {
   xLabel: string;
   yLabel: string;
   t: (key: string) => string;
-}
-
-function fmt(n: number): string {
-  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}k`;
-  return n.toFixed(1);
 }
 
 function pickScale(extent: [number, number]) {
@@ -58,11 +52,18 @@ export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLab
     const xExtent = d3.extent(valid, (d) => d[xIndicator]) as [number, number];
     const yExtent = d3.extent(valid, (d) => d[yIndicator]) as [number, number];
 
+    const useLogX = xExtent[0] > 0 && xExtent[1] / xExtent[0] > 1000;
+    const useLogY = yExtent[0] > 0 && yExtent[1] / yExtent[0] > 1000;
+    const tx = (v: number) => (useLogX ? Math.log10(v) : v);
+    const ty = (v: number) => (useLogY ? Math.log10(v) : v);
+
     const x = pickScale(xExtent).domain(xExtent).range([0, width]).nice();
     const y = pickScale(yExtent).domain(yExtent).range([height, 0]).nice();
 
-    const xs = valid.map((d) => d[xIndicator]);
-    const ys = valid.map((d) => d[yIndicator]);
+    // Corrélation calculée sur les valeurs TELLES QU'AFFICHÉES (log si axe log),
+    // pour être cohérente avec le nuage de points visible.
+    const xs = valid.map((d) => tx(d[xIndicator]));
+    const ys = valid.map((d) => ty(d[yIndicator]));
     const mx = d3.mean(xs)!;
     const my = d3.mean(ys)!;
     let num = 0, dx = 0, dy = 0;
@@ -77,8 +78,8 @@ export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLab
       .data(valid)
       .enter()
       .append("circle")
-      .attr("cx", (d) => x(d[xIndicator]))
-      .attr("cy", (d) => y(d[yIndicator]))
+      .attr("cx", (d) => x(tx(d[xIndicator])))
+      .attr("cy", (d) => y(ty(d[yIndicator])))
       .attr("r", 3.5)
       .attr("fill", "#60a5fa")
       .attr("opacity", 0.7)
@@ -107,11 +108,12 @@ export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLab
       .attr("text-anchor", "middle").attr("font-size", "9").attr("fill", "#6b7280")
       .text(yLabel);
 
+    const logNote = useLogX || useLogY ? " (log)" : "";
     g.append("text")
       .attr("x", width).attr("y", 2)
       .attr("text-anchor", "end").attr("font-size", "9").attr("font-weight", "600")
       .attr("fill", Math.abs(r) > 0.5 ? "#2563eb" : "#9ca3af")
-      .text(`r = ${r.toFixed(2)} (n=${valid.length})`);
+      .text(`r = ${r.toFixed(2)}${logNote} (n=${valid.length})`);
   }, [data, xIndicator, yIndicator, xLabel, yLabel, t]);
 
   return (
