@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026.08.004 (2026-08-12)
+
+### Added
+- **Recherche de pays** (autocomplete FR/EN par nom ou code ISO3, drapeaux) avec flyTo animé et contour de sélection
+- **Fiche pays** au clic sur la carte ou via la recherche : drapeau, nom localisé, rang mondial de l'indicateur actif, les 8 indicateurs avec valeur/année/rang
+- **Tooltip enrichi** sur 3 lignes : nom + rang mondial, indicateur actif (valeur/année), PIB/habitant
+- Pays sélectionné partageable dans l'URL (`?c=`)
+- Dépendance `i18n-iso-countries` (noms FR/EN + drapeaux par code ISO3)
+
+### Fixed
+- Clic sur un pays de la carte inopérant : closure des handlers Leaflet figée sur l'index pays vide → `useRef` + `useCallback` stable
+- 16 requêtes OSM 400 en console (tuiles hors-monde au zoom 2) → `bounds` Web Mercator sur le tileLayer, console propre
+
+### Changed
+- Panneau de contrôle toujours ouvert par défaut au chargement (recherche découverte)
+
 ## 2026.08.002 (2026-08-12)
 
 ### Fixed

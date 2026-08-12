@@ -1,9 +1,17 @@
 import { useEffect, useRef, useState, useMemo } from "react";
+import * as d3 from "d3";
 import type L from "leaflet";
 import MapPanel from "./MapPanel";
 import type { CountryData } from "../data/types";
+import type { CountryEntry } from "../utils/countries";
 
 export type MapMode = "single" | "dual" | "ratio";
+
+export interface MapFocus {
+  lat: number;
+  lng: number;
+  zoom: number;
+}
 
 interface Props {
   data: CountryData[];
@@ -16,15 +24,23 @@ interface Props {
   showCables: boolean;
   mode: MapMode;
   resetToken?: number;
+  focus?: MapFocus | null;
+  selectedIso3?: string | null;
+  onSelectCountry?: (iso3: string) => void;
+  onIndexReady?: (index: Record<string, CountryEntry>) => void;
+  secondaryKey?: string;
+  secondaryLabel?: string;
   t: (key: string, vars?: Record<string, string>) => string;
 }
 
 export default function Map({
-  data, indicatorA, labelA, shortA, indicatorB, labelB, shortB, showCables, mode, resetToken, t,
+  data, indicatorA, labelA, shortA, indicatorB, labelB, shortB, showCables, mode,
+  resetToken, focus, selectedIso3, onSelectCountry, onIndexReady, secondaryKey, secondaryLabel, t,
 }: Props) {
   const [geoData, setGeoData] = useState<GeoJSON.GeoJsonObject | null>(null);
   const [geoError, setGeoError] = useState(false);
   const syncGroup = useRef<L.Map[]>([]);
+  const indexSent = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -34,6 +50,29 @@ export default function Map({
       .catch(() => { if (!cancelled) setGeoError(true); });
     return () => { cancelled = true; };
   }, []);
+
+  // Construit l'index pays (nom + centroïde) pour la recherche et le focus
+  useEffect(() => {
+    if (!geoData || !onIndexReady || indexSent.current) return;
+    const fc = geoData as GeoJSON.FeatureCollection;
+    const index: Record<string, CountryEntry> = {};
+    fc.features.forEach((f) => {
+      const props = (f.properties ?? {}) as Record<string, unknown>;
+      let iso3 = props["ISO3166-1-Alpha-3"] as string | undefined;
+      if (!iso3 || iso3 === "-99") {
+        const name = (props.ADMIN || props.name || "") as string;
+        const fallback: Record<string, string> = { France: "FRA", Norway: "NOR", Kosovo: "XKX" };
+        iso3 = fallback[name];
+        if (!iso3) return;
+      }
+      if (index[iso3]) return;
+      const name = (props.ADMIN || props.name || "") as string;
+      const c = d3.geoCentroid(f as GeoJSON.Feature);
+      index[iso3] = { iso3, name, lat: c[1], lng: c[0] };
+    });
+    indexSent.current = true;
+    onIndexReady(index);
+  }, [geoData, onIndexReady]);
 
   const valueA = useMemo(() => (d: CountryData) => {
     const v = d[indicatorA];
@@ -74,36 +113,42 @@ export default function Map({
 
   const dual = mode === "dual";
 
+  const panelProps = {
+    data,
+    showCables,
+    geoData,
+    syncGroup: dual ? syncGroup : undefined,
+    resetToken,
+    focus,
+    selectedIso3,
+    onSelectCountry,
+    secondaryKey,
+    secondaryLabel,
+    t,
+  };
+
   return (
     <>
       <div style={{ position: "fixed", inset: 0, display: "flex" }}>
         <div style={{ flex: 1, position: "relative" }}>
           <MapPanel
-            data={data}
+            {...panelProps}
             label={mode === "ratio" ? `${shortA} / ${shortB}` : labelA}
             valueFn={mode === "ratio" ? valueRatio : valueA}
             yearFn={mode === "ratio" ? undefined : yearA}
-            showCables={showCables}
-            geoData={geoData}
-            syncGroup={dual ? syncGroup : undefined}
+            indicatorKey={indicatorA}
             showZoomControl={true}
-            resetToken={resetToken}
-            t={t}
           />
         </div>
         {dual && (
           <div style={{ flex: 1, position: "relative", borderLeft: "3px solid #fff" }}>
             <MapPanel
-              data={data}
+              {...panelProps}
               label={labelB}
               valueFn={valueB}
               yearFn={yearB}
-              showCables={showCables}
-              geoData={geoData}
-              syncGroup={syncGroup}
+              indicatorKey={indicatorB}
               showZoomControl={false}
-              resetToken={resetToken}
-              t={t}
             />
           </div>
         )}

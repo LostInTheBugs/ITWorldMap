@@ -5,3 +5,20 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
 
 /* Bannière disclaimer visible → décale le contrôle de zoom Leaflet (top-right) sous elle */
 body.itwm-disclaimer .leaflet-top.leaflet-right { top: 56px; }
+
+/* Tooltip pays enrichi */
+.itwm-tooltip {
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #374151;
+}
+.itwm-tooltip b { color: #111827; }
+
+/* Résultats de recherche de pays */
+.itwm-search-item:hover { background: #eff6ff; }
+.itwm-search-item + .itwm-search-item { border-top: 1px solid #f3f4f6; }

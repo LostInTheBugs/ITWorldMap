@@ -23,6 +23,9 @@ export const translations: Record<Lang, Record<string, string>> = {
     "app.resetView": "Réinitialiser la vue",
     "app.collapse": "Réduire le panneau",
     "app.expand": "Agrandir le panneau",
+    "app.search.placeholder": "Rechercher un pays…",
+    "app.close": "Fermer",
+    "app.detail.rank": "🏆 Rang mondial : #{rank}/{total} · {ind}",
 
     // Disclaimer
     "disclaimer.text": "⚠️ Cette application est une démo/test. Les données peuvent contenir des erreurs ou des valeurs obsolètes. Ne pas utiliser à des fins de décision.",
@@ -85,6 +88,9 @@ export const translations: Record<Lang, Record<string, string>> = {
     "app.resetView": "Reset view",
     "app.collapse": "Collapse panel",
     "app.expand": "Expand panel",
+    "app.search.placeholder": "Search a country…",
+    "app.close": "Close",
+    "app.detail.rank": "🏆 World rank: #{rank}/{total} · {ind}",
 
     // Disclaimer
     "disclaimer.text": "⚠️ This application is a demo/test. Data may contain errors or outdated values. Do not use for decision-making purposes.",

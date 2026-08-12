@@ -6,6 +6,7 @@ import NoWrapTileLayer from "./NoWrapTileLayer";
 import CableLayer from "./CableLayer";
 import ColorLegend from "./ColorLegend";
 import type { CountryData } from "../data/types";
+import type { MapFocus } from "./Map";
 import { fmt } from "../utils/format";
 
 interface Props {
@@ -18,6 +19,12 @@ interface Props {
   syncGroup?: React.MutableRefObject<L.Map[]>;
   showZoomControl?: boolean;
   resetToken?: number;
+  focus?: MapFocus | null;
+  selectedIso3?: string | null;
+  onSelectCountry?: (iso3: string) => void;
+  indicatorKey?: string;
+  secondaryKey?: string;
+  secondaryLabel?: string;
   t: (key: string, vars?: Record<string, string>) => string;
 }
 
@@ -45,6 +52,10 @@ function getQuantileColor(value: number, thresholds: number[]): string {
   return PALETTE[PALETTE.length - 1];
 }
 
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 function ResizeController() {
   const map = useMap();
   useEffect(() => {
@@ -57,11 +68,14 @@ function ResizeController() {
   return null;
 }
 
-function ViewResetter({ token }: { token: number }) {
+function ViewController({ token, focus }: { token: number; focus?: MapFocus | null }) {
   const map = useMap();
   useEffect(() => {
     if (token > 0) map.setView([20, 0], 2, { animate: false });
   }, [token, map]);
+  useEffect(() => {
+    if (focus) map.flyTo([focus.lat, focus.lng], focus.zoom, { duration: 1.2 });
+  }, [focus, map]);
   return null;
 }
 
@@ -99,7 +113,8 @@ function SyncController({ syncGroup }: { syncGroup?: React.MutableRefObject<L.Ma
 }
 
 export default function MapPanel({
-  data, label, valueFn, yearFn, showCables, geoData, syncGroup, showZoomControl = true, resetToken = 0, t,
+  data, label, valueFn, yearFn, showCables, geoData, syncGroup, showZoomControl = true,
+  resetToken = 0, focus, selectedIso3, onSelectCountry, indicatorKey, secondaryKey, secondaryLabel, t,
 }: Props) {
   const valueMap = useMemo(() => {
     const map: Record<string, number> = {};
@@ -119,6 +134,19 @@ export default function MapPanel({
     });
     return map;
   }, [data, yearFn]);
+
+  const secondaryMap = useMemo(() => {
+    const map: Record<string, { v: number; y?: string }> = {};
+    if (!secondaryKey) return map;
+    data.forEach((d) => {
+      const v = d[secondaryKey];
+      if (typeof v === "number" && isFinite(v)) {
+        const y = d[`${secondaryKey}_year`];
+        map[d.iso3] = { v, y: typeof y === "string" ? y : undefined };
+      }
+    });
+    return map;
+  }, [data, secondaryKey]);
 
   const values = useMemo(() => Object.values(valueMap).sort((a, b) => a - b), [valueMap]);
 
@@ -142,11 +170,15 @@ export default function MapPanel({
     const props = (feature as { properties?: Record<string, unknown> })?.properties;
     const iso3 = getIso3(props);
     const value = iso3 ? valueMap[iso3] : undefined;
+    const selected = iso3 !== undefined && iso3 === selectedIso3;
     return {
       fillColor: value !== undefined ? getQuantileColor(value, thresholds) : "#d4d4d4",
-      weight: 1, opacity: 1, color: "#cccccc", fillOpacity: 0.85,
+      weight: selected ? 3 : 1,
+      opacity: 1,
+      color: selected ? "#2563eb" : "#cccccc",
+      fillOpacity: 0.85,
     };
-  }, [valueMap, thresholds]);
+  }, [valueMap, thresholds, selectedIso3]);
 
   const onEachFeature = useCallback((feature: unknown, layer: L.Layer) => {
     const props = (feature as { properties?: Record<string, unknown> })?.properties;
@@ -158,8 +190,16 @@ export default function MapPanel({
     const formatted = value !== undefined ? fmt(value) : t("map.na");
     const yearStr = year ? ` (${year})` : "";
     const rankStr = rank ? ` · #${rank}/${values.length}` : "";
-    layer.bindTooltip(`${name}: ${formatted}${yearStr}${rankStr} — ${label}`, { sticky: true });
-  }, [valueMap, yearMap, rankMap, values.length, label, t]);
+    const lines = [`<b>${escapeHtml(name)}</b>${rankStr}`, `${escapeHtml(label)} : ${escapeHtml(formatted)}${yearStr}`];
+    if (secondaryKey && secondaryLabel && secondaryKey !== indicatorKey && iso3) {
+      const sec = secondaryMap[iso3];
+      if (sec) lines.push(`${escapeHtml(secondaryLabel)} : ${escapeHtml(fmt(sec.v))}${sec.y ? ` (${sec.y})` : ""}`);
+    }
+    layer.bindTooltip(lines.join("<br>"), { sticky: true, className: "itwm-tooltip" });
+    if (iso3 && onSelectCountry) {
+      layer.on("click", () => onSelectCountry(iso3));
+    }
+  }, [valueMap, yearMap, rankMap, values.length, label, t, secondaryKey, secondaryLabel, indicatorKey, secondaryMap, onSelectCountry]);
 
   const geoKey = `${label}-${thresholds.join(",")}`;
 
@@ -174,7 +214,7 @@ export default function MapPanel({
         <ResizeController />
         <SyncController syncGroup={syncGroup} />
         {showZoomControl && <ZoomControl position="topright" />}
-        <ViewResetter token={resetToken} />
+        <ViewController token={resetToken} focus={focus} />
         {geoData && (
           <GeoJSON key={geoKey} data={geoData} style={style} onEachFeature={onEachFeature} />
         )}

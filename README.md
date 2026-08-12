@@ -15,8 +15,10 @@ Interactive world map visualizing IT indicators (Internet, mobile, broadband, se
 - 🗺️ **3 display modes**: single map · dual synchronized maps · ratio of two indicators
 - 🔌 Submarine cable layer (on/off)
 - 📊 Scatter plot with auto log-scale and Pearson correlation (computed on displayed values)
-- 🔗 **Shareable URL state** (`?mode=&a=&b=&x=&y=&cables=&lang=`) — reload keeps your view
-- 🖱️ Country tooltips with value, data year and world rank (`#57/214`)
+- 🔗 **Shareable URL state** (`?mode=&a=&b=&x=&y=&cables=&c=&lang=`) — reload keeps your view
+- 🔍 **Country search** (FR/EN autocomplete, flags) with animated fly-to and selection highlight
+- 📋 **Country detail panel** on click: flag, localized name, world rank, all 8 indicators with value/year/rank
+- 🖱️ Country tooltips with value, data year, world rank and GDP/capita
 - 🌐 Reset view button, collapsible panels (persisted)
 - 🌍 FR/EN internationalization
 
