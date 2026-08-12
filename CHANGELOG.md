@@ -23,6 +23,9 @@
 - `fmt()` mutualisé dans `src/utils/format.ts` ; `aria-pressed` sur les boutons de mode
 - README : section Features ajoutée sous l'intro
 
+### Hotfix 2026.08.002-c1
+- Contrôle de zoom recouvert par la bannière disclaimer au premier chargement → décalé sous la bannière via `body.itwm-disclaimer` (CSS)
+
 ## 2026.08.001 (2026-08-01)
 
 ### Changed

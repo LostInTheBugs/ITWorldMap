@@ -119,6 +119,11 @@ export default function App() {
     document.documentElement.lang = lang;
   }, [lang]);
 
+  // Décale le contrôle de zoom Leaflet (top-right) sous la bannière disclaimer
+  useEffect(() => {
+    document.body.classList.toggle("itwm-disclaimer", !disclaimerDismissed);
+  }, [disclaimerDismissed]);
+
   const needsB = mode === "dual" || mode === "ratio";
 
   const labelOf = (key: string, kind: "labelKey" | "shortKey") =>
