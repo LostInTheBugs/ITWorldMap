@@ -33,6 +33,7 @@ interface Props {
   secondaryKey?: string;
   secondaryLabel?: string;
   year?: number | null;
+  yearB?: number | null;
   series?: YearSeries | null;
   compareIso3?: string | null;
   t: (key: string, vars?: Record<string, string>) => string;
@@ -41,7 +42,7 @@ interface Props {
 export default function Map({
   data, indicatorA, labelA, shortA, indicatorB, labelB, shortB, showCables, mode,
   resetToken, focus, selectedIso3, onSelectCountry, onIndexReady, secondaryKey, secondaryLabel,
-  year, series, compareIso3, t,
+  year, yearB, series, compareIso3, t,
 }: Props) {
   const [geoData, setGeoData] = useState<GeoJSON.GeoJsonObject | null>(null);
   const [geoError, setGeoError] = useState(false);
@@ -116,15 +117,18 @@ export default function Map({
     return typeof v === "number" ? v : undefined;
   }, [indicatorA, year, series]);
 
+  // Année de la carte B : propre au mode dual (sinon suit la carte A)
+  const effYearB = year != null && yearB != null ? yearB : year;
+
   const valueB = useMemo(() => (d: CountryData) => {
-    if (year != null && series) {
-      const s = seriesValue(series, indicatorB, d.iso3, year);
+    if (effYearB != null && series) {
+      const s = seriesValue(series, indicatorB, d.iso3, effYearB);
       if (s !== undefined) return s;
       return undefined;
     }
     const v = d[indicatorB];
     return typeof v === "number" ? v : undefined;
-  }, [indicatorB, year, series]);
+  }, [indicatorB, effYearB, series]);
 
   const valueRatio = useMemo(() => (d: CountryData) => {
     let a: number | undefined;
@@ -151,14 +155,14 @@ export default function Map({
     return typeof y === "string" ? y : undefined;
   }, [indicatorA, year, series]);
 
-  const yearB = useMemo(() => (d: CountryData) => {
-    if (year != null && series) {
-      const s = seriesValue(series, indicatorB, d.iso3, year);
-      return s !== undefined ? String(year) : undefined;
+  const yearBFn = useMemo(() => (d: CountryData) => {
+    if (effYearB != null && series) {
+      const s = seriesValue(series, indicatorB, d.iso3, effYearB);
+      return s !== undefined ? String(effYearB) : undefined;
     }
     const y = d[`${indicatorB}_year`];
     return typeof y === "string" ? y : undefined;
-  }, [indicatorB, year, series]);
+  }, [indicatorB, effYearB, series]);
 
   if (geoError) {
     return (
@@ -208,7 +212,8 @@ export default function Map({
               {...panelProps}
               label={labelB}
               valueFn={valueB}
-              yearFn={yearB}
+              yearFn={yearBFn}
+              year={effYearB}
               indicatorKey={indicatorB}
               showZoomControl={false}
             />

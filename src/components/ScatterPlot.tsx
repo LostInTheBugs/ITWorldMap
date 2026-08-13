@@ -10,6 +10,9 @@ interface Props {
   xLabel: string;
   yLabel: string;
   t: (key: string) => string;
+  onSelectCountry?: (iso3: string) => void;
+  selectedIso3?: string | null;
+  compareIso3?: string | null;
 }
 
 function pickScale(extent: [number, number]) {
@@ -17,7 +20,7 @@ function pickScale(extent: [number, number]) {
   return useLog ? d3.scaleLog() : d3.scaleLinear();
 }
 
-export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLabel, t }: Props) {
+export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLabel, t, onSelectCountry, selectedIso3, compareIso3 }: Props) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
@@ -81,9 +84,15 @@ export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLab
       // Valeurs BRUTES : l'échelle x/y est déjà log quand nécessaire (jamais de double-log)
       .attr("cx", (d) => x(d[xIndicator]))
       .attr("cy", (d) => y(d[yIndicator]))
-      .attr("r", 3.5)
-      .attr("fill", "#60a5fa")
-      .attr("opacity", 0.7)
+      .attr("r", (d) => (d.iso3 === selectedIso3 || d.iso3 === compareIso3 ? 5 : 3.5))
+      .attr("fill", (d) =>
+        d.iso3 === compareIso3 ? "#f59e0b" : d.iso3 === selectedIso3 ? "#2563eb" : "#60a5fa",
+      )
+      .attr("stroke", (d) => (d.iso3 === selectedIso3 || d.iso3 === compareIso3 ? "#fff" : "none"))
+      .attr("stroke-width", 1.5)
+      .attr("opacity", 0.75)
+      .attr("cursor", onSelectCountry ? "pointer" : "default")
+      .on("click", (_event, d) => onSelectCountry?.(d.iso3))
       .append("title")
       .text((d) => `${d.iso3}: ${fmt(d[xIndicator])}, ${fmt(d[yIndicator])}`);
 
@@ -115,7 +124,7 @@ export default function ScatterPlot({ data, xIndicator, yIndicator, xLabel, yLab
       .attr("text-anchor", "end").attr("font-size", "9").attr("font-weight", "600")
       .attr("fill", Math.abs(r) > 0.5 ? "#2563eb" : "#9ca3af")
       .text(`r = ${r.toFixed(2)}${logNote} (n=${valid.length})`);
-  }, [data, xIndicator, yIndicator, xLabel, yLabel, t]);
+  }, [data, xIndicator, yIndicator, xLabel, yLabel, t, onSelectCountry, selectedIso3, compareIso3]);
 
   return (
     <div style={{ background: "rgba(255,255,255,0.9)", borderRadius: 8, padding: 8 }}>

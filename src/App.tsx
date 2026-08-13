@@ -112,6 +112,11 @@ export default function App() {
     const y = initialParams.get("year");
     return y !== null && /^\d{4}$/.test(y) ? Number(y) : null;
   });
+  // Année de la carte B (mode dual uniquement)
+  const [yearB, setYearB] = useState<number | null>(() => {
+    const y = initialParams.get("yearB");
+    return y !== null && /^\d{4}$/.test(y) ? Number(y) : null;
+  });
 
   const loadSeries = useCallback(() => {
     if (series || seriesError) return;
@@ -184,9 +189,10 @@ export default function App() {
     if (selectedIso3) p.set("c", selectedIso3);
     if (compareIso3) p.set("compare", compareIso3);
     if (year != null) p.set("year", String(year));
+    if (yearB != null && mode === "dual") p.set("yearB", String(yearB));
     p.set("lang", lang);
     window.history.replaceState(null, "", `${window.location.pathname}?${p.toString()}`);
-  }, [mode, indicatorA, indicatorB, xAxis, yAxis, showCables, selectedIso3, compareIso3, year, lang]);
+  }, [mode, indicatorA, indicatorB, xAxis, yAxis, showCables, selectedIso3, compareIso3, year, yearB, lang]);
 
   // Année depuis ?year= (chargée une fois les séries dispo)
   useEffect(() => {
@@ -354,6 +360,7 @@ export default function App() {
         secondaryKey="gdp_per_capita"
         secondaryLabel={t("indicator.gdp_per_capita")}
         year={yearMode ? year : null}
+        yearB={mode === "dual" && yearMode ? yearB : null}
         series={series}
         t={t}
       />
@@ -518,6 +525,23 @@ export default function App() {
                     style={{ width: "100%", margin: 0 }}
                     aria-label={t("app.year.label")}
                   />
+                  {mode === "dual" && (
+                    <>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#6b7280", marginTop: 8, marginBottom: 2 }}>
+                        <span>{t("app.year.labelB")}</span>
+                        <span style={{ fontWeight: 700, color: "#f59e0b" }}>{yearB ?? year ?? yearRange[1]}</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={yearRange[0]}
+                        max={yearRange[1]}
+                        value={yearB ?? year ?? yearRange[1]}
+                        onChange={(e) => setYearB(Number(e.target.value))}
+                        style={{ width: "100%", margin: 0 }}
+                        aria-label={t("app.year.labelB")}
+                      />
+                    </>
+                  )}
                   <div style={{ fontSize: 10, color: "#9ca3af", marginTop: 2 }}>
                     {t("app.year.hint", { ind: labelOf(indicatorA, "shortKey") })}
                   </div>
@@ -692,6 +716,9 @@ export default function App() {
             xLabel={labelOf(xAxis, "shortKey")}
             yLabel={labelOf(yAxis, "shortKey")}
             t={t}
+            onSelectCountry={selectCountry}
+            selectedIso3={selectedIso3}
+            compareIso3={compareIso3}
           />
         </div>
       ) : (
