@@ -5,6 +5,7 @@ import MapPanel from "./MapPanel";
 import type { CountryData } from "../data/types";
 import type { CountryEntry } from "../utils/countries";
 import { seriesValue, type YearSeries } from "../utils/series";
+import centroids from "../data/centroids.json";
 
 export type MapMode = "single" | "dual" | "ratio";
 
@@ -72,12 +73,38 @@ export default function Map({
       }
       if (index[iso3]) return;
       const name = (props.ADMIN || props.name || "") as string;
-      const c = d3.geoCentroid(f as GeoJSON.Feature);
-      index[iso3] = { iso3, name, lat: c[1], lng: c[0] };
+      // Table de centroïdes calculée sur le GeoJSON ORIGINAL (le fichier simplifié
+      // par mapshaper a des géométries invalides pour les multipolygones → aires ~4π)
+      const centroid = (centroids as unknown as Record<string, [number, number]>)[iso3] ?? mainCentroid(f as GeoJSON.Feature);
+      index[iso3] = { iso3, name, lat: centroid[1], lng: centroid[0] };
     });
     indexSent.current = true;
     onIndexReady(index);
   }, [geoData, onIndexReady]);
+
+  /**
+   * Centroïde du polygone PRINCIPAL (le plus grand en surface) pour les
+   * MultiPolygon. Le centroïde global de toute la géométrie est inutilisable :
+   * ex. France (Guyane/Polynésie), USA (Alaska/Hawaï), Chili (îles du Pacifique),
+   * Russie → le point tombe dans l'océan et le flyTo « zoome dans le vide ».
+   */
+  function mainCentroid(feature: GeoJSON.Feature): [number, number] {
+    const g = feature.geometry;
+    if (g && g.type === "MultiPolygon") {
+      let best: [number, number] | null = null;
+      let bestArea = -1;
+      for (const coords of g.coordinates) {
+        const poly: GeoJSON.Geometry = { type: "Polygon", coordinates: coords };
+        const area = d3.geoArea(poly as unknown as GeoJSON.Feature);
+        if (area > bestArea) {
+          bestArea = area;
+          best = d3.geoCentroid(poly as unknown as GeoJSON.Feature);
+        }
+      }
+      if (best) return best;
+    }
+    return d3.geoCentroid(feature);
+  }
 
   const valueA = useMemo(() => (d: CountryData) => {
     if (year != null && series) {

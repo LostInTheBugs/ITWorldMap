@@ -17,6 +17,10 @@
 ### Hotfix 2026.08.006-c1
 - Mode années fixes via `?year=` au chargement : les séries n'étaient jamais chargées (loadSeries uniquement déclenché par le toggle) → « Chargement des données historiques… » infini. Ajout d'un `useEffect` qui charge les séries au montage quand `yearMode` est actif.
 
+### Hotfix 2026.08.006-c2
+- **Scatter vide** : double log sur les positions des points (`x(tx(v))` où l'échelle est déjà log) introduit par le fix de corrélation 2026.08.002 → tous les points écrasés hors du graphique. Les cercles reçoivent désormais les valeurs brutes ; `tx/ty` ne servent qu'à la corrélation.
+- **FlyTo dans le vide** : les centroïdes calculés sur le GeoJSON simplifié par mapshaper sont faux — la simplification produit des géométries invalides pour les multipolygones (aires ~4π, points n'importe où : France → Pacifique, USA → Atlantique, Russie → Antarctique). Nouvelle table `src/data/centroids.json` (239 pays) calculée sur le GeoJSON ORIGINAL avec le centroïde du plus grand polygone (métropole pour la France, continent pour les USA…).
+
 ## 2026.08.004 (2026-08-12)
 
 ### Added
