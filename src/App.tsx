@@ -7,6 +7,8 @@ import type { CountryData } from "./data/types";
 import { useLang } from "./i18n/LangContext";
 import { countryName, flagEmoji, type CountryEntry } from "./utils/countries";
 import { fmt } from "./utils/format";
+import { fetchSeries, seriesYearRange, seriesValue, type YearSeries } from "./utils/series";
+import { useMediaQuery } from "./hooks/useMediaQuery";
 
 const indicatorsData = indicatorsRaw as CountryData[];
 
@@ -94,8 +96,57 @@ export default function App() {
 
   const [countryIndex, setCountryIndex] = useState<Record<string, CountryEntry>>({});
   const [selectedIso3, setSelectedIso3] = useState<string | null>(null);
+  const [compareIso3, setCompareIso3] = useState<string | null>(null);
+  const [compareMode, setCompareMode] = useState(false);
   const [focus, setFocus] = useState<MapFocus | null>(null);
   const [search, setSearch] = useState("");
+
+  // Séries temporelles (chargées à la demande au premier usage du slider d'année)
+  const [series, setSeries] = useState<YearSeries | null>(null);
+  const [seriesError, setSeriesError] = useState(false);
+  const [yearMode, setYearMode] = useState(() => {
+    const y = initialParams.get("year");
+    return y !== null && /^\d{4}$/.test(y);
+  });
+  const [year, setYear] = useState<number | null>(() => {
+    const y = initialParams.get("year");
+    return y !== null && /^\d{4}$/.test(y) ? Number(y) : null;
+  });
+
+  const loadSeries = useCallback(() => {
+    if (series || seriesError) return;
+    fetchSeries().then(setSeries).catch(() => setSeriesError(true));
+  }, [series, seriesError]);
+
+  const yearRange = useMemo(() => seriesYearRange(series), [series]);
+
+  // Dernière année avec données pour l'indicateur actif (défaut du slider)
+  const defaultYear = useMemo(() => {
+    if (!series) return null;
+    let max = 0;
+    for (const byYear of Object.values(series[indicatorA] ?? {})) {
+      for (const y of Object.keys(byYear)) max = Math.max(max, Number(y));
+    }
+    return max || null;
+  }, [series, indicatorA]);
+
+  // Rangs recalculés pour l'année sélectionnée (sinon incohérents avec la carte)
+  const rankAtYear = useMemo(() => {
+    if (year == null || !series) return null;
+    const out: Record<string, Record<string, number>> = {};
+    for (const ind of ALL_INDICATORS) {
+      const vals: [string, number][] = [];
+      for (const [iso3, byYear] of Object.entries(series[ind.key] ?? {})) {
+        const v = byYear[String(year)];
+        if (typeof v === "number") vals.push([iso3, v]);
+      }
+      vals.sort((a, b) => b[1] - a[1]);
+      const ranks: Record<string, number> = {};
+      vals.forEach(([iso3], i) => { ranks[iso3] = i + 1; });
+      out[ind.key] = ranks;
+    }
+    return out;
+  }, [series, year]);
 
   // Ref pour que les handlers de clic des layers Leaflet (créés une seule fois)
   // voient toujours l'index pays à jour (sinon closure figée sur {} au chargement).
@@ -126,9 +177,20 @@ export default function App() {
     p.set("y", yAxis);
     if (showCables) p.set("cables", "1");
     if (selectedIso3) p.set("c", selectedIso3);
+    if (compareIso3) p.set("compare", compareIso3);
+    if (year != null) p.set("year", String(year));
     p.set("lang", lang);
     window.history.replaceState(null, "", `${window.location.pathname}?${p.toString()}`);
-  }, [mode, indicatorA, indicatorB, xAxis, yAxis, showCables, selectedIso3, lang]);
+  }, [mode, indicatorA, indicatorB, xAxis, yAxis, showCables, selectedIso3, compareIso3, year, lang]);
+
+  // Année depuis ?year= (chargée une fois les séries dispo)
+  useEffect(() => {
+    const y = initialParams.get("year");
+    if (y && /^\d{4}$/.test(y) && series && year === null) {
+      setYear(Number(y));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [series, initialParams]);
 
   useEffect(() => {
     document.documentElement.lang = lang;
@@ -199,15 +261,72 @@ export default function App() {
   const selectCountry = useCallback((iso3: string) => {
     const c = countryIndexRef.current[iso3];
     if (!c) return;
-    setSelectedIso3(iso3);
     setFocus({ lat: c.lat, lng: c.lng, zoom: 5 });
     setSearch("");
+    setSelectedIso3((cur) => {
+      if (compareModeRef.current) {
+        // Mode comparaison : le clic/recherche définit (ou remplace) le 2e pays
+        if (iso3 !== cur) setCompareIso3(iso3);
+        return cur;
+      }
+      return iso3;
+    });
   }, []);
+
+  const compareModeRef = useRef(compareMode);
+  useEffect(() => {
+    compareModeRef.current = compareMode;
+  }, [compareMode]);
+
+  // Pays B depuis ?compare= (validé une fois l'index pays chargé)
+  useEffect(() => {
+    const c = initialParams.get("compare");
+    if (c && countryIndex[c] && !compareIso3) {
+      setCompareIso3(c);
+      setCompareMode(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countryIndex, initialParams]);
 
   const selectedEntry = selectedIso3 ? countryIndex[selectedIso3] : undefined;
   const selectedData = selectedIso3 ? indicatorsData.find((d) => d.iso3 === selectedIso3) : undefined;
-  const selectedRank = selectedIso3 ? rankOf[indicatorA]?.[selectedIso3] : undefined;
-  const selectedRankTotal = indicatorA ? Object.keys(rankOf[indicatorA] ?? {}).length : 0;
+  const rankSrc = rankAtYear ?? rankOf;
+  const selectedRank = selectedIso3 ? rankSrc[indicatorA]?.[selectedIso3] : undefined;
+  const selectedRankTotal = indicatorA ? Object.keys(rankSrc[indicatorA] ?? {}).length : 0;
+  const compareEntry = compareIso3 ? countryIndex[compareIso3] : undefined;
+  const compareData = compareIso3 ? indicatorsData.find((d) => d.iso3 === compareIso3) : undefined;
+
+  // Mobile : panneaux en pleine largeur
+  const isMobile = useMediaQuery("(max-width: 640px)");
+  const panelWidth = isMobile ? "calc(100vw - 20px)" : undefined;
+
+  const startCompare = () => {
+    setCompareMode(true);
+    setCompareIso3(null);
+  };
+
+  const stopCompare = () => {
+    setCompareMode(false);
+    setCompareIso3(null);
+  };
+
+  const swapCompare = () => {
+    if (!compareIso3) return;
+    setSelectedIso3(compareIso3);
+    setCompareIso3(selectedIso3);
+  };
+
+  const valueAtYear = (iso3: string, key: string): number | undefined =>
+    year != null && series ? seriesValue(series, key, iso3, year) : undefined;
+
+  const yearOf = (iso3: string, key: string): string | undefined => {
+    if (year != null && series) {
+      return valueAtYear(iso3, key) !== undefined ? String(year) : undefined;
+    }
+    const d = indicatorsData.find((x) => x.iso3 === iso3);
+    const y = d?.[`${key}_year`];
+    return typeof y === "string" ? y : undefined;
+  };
 
   return (
     <>
@@ -224,10 +343,13 @@ export default function App() {
         resetToken={viewToken}
         focus={focus}
         selectedIso3={selectedIso3}
+        compareIso3={compareIso3}
         onSelectCountry={selectCountry}
         onIndexReady={setCountryIndex}
         secondaryKey="gdp_per_capita"
         secondaryLabel={t("indicator.gdp_per_capita")}
+        year={yearMode ? year : null}
+        series={series}
         t={t}
       />
 
@@ -255,7 +377,12 @@ export default function App() {
 
       {/* Control panel — top left */}
       {panels.ctrl ? (
-        <div style={{ ...panelStyle, top: disclaimerDismissed ? 10 : 48, left: 10, maxWidth: 290 }}>
+        <div style={{
+          ...panelStyle, top: disclaimerDismissed ? 10 : 48, left: 10,
+          maxWidth: panelWidth ?? 290,
+          maxHeight: isMobile ? "55vh" : undefined,
+          overflowY: isMobile ? "auto" : undefined,
+        }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, gap: 6 }}>
             <h1 style={{ margin: 0, fontSize: 16, fontWeight: 700, whiteSpace: "nowrap" }}>{t("app.title")}</h1>
             <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
@@ -351,6 +478,49 @@ export default function App() {
             {t("app.cables")}
           </label>
 
+          {/* Sélecteur d'année (séries temporelles) */}
+          <label style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8, fontSize: 12, cursor: "pointer", fontWeight: 600, color: "#374151" }}>
+            <input
+              type="checkbox"
+              checked={yearMode}
+              onChange={(e) => {
+                const on = e.target.checked;
+                setYearMode(on);
+                if (on) {
+                  loadSeries();
+                  setYear((cur) => cur ?? defaultYear ?? yearRange?.[1] ?? 2023);
+                }
+              }}
+            />
+            {t("app.year.toggle")}
+          </label>
+          {yearMode && (
+            <div style={{ marginTop: 6 }}>
+              {seriesError && <div style={{ fontSize: 11, color: "#dc2626" }}>{t("app.year.error")}</div>}
+              {!series && !seriesError && <div style={{ fontSize: 11, color: "#6b7280" }}>{t("app.year.loading")}</div>}
+              {series && yearRange && (
+                <>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#6b7280", marginBottom: 2 }}>
+                    <span>{t("app.year.label")}</span>
+                    <span style={{ fontWeight: 700, color: "#2563eb" }}>{year ?? yearRange[1]}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={yearRange[0]}
+                    max={yearRange[1]}
+                    value={year ?? yearRange[1]}
+                    onChange={(e) => setYear(Number(e.target.value))}
+                    style={{ width: "100%", margin: 0 }}
+                    aria-label={t("app.year.label")}
+                  />
+                  <div style={{ fontSize: 10, color: "#9ca3af", marginTop: 2 }}>
+                    {t("app.year.hint", { ind: labelOf(indicatorA, "shortKey") })}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
           {/* Recherche de pays */}
           <div style={{ marginTop: 10, position: "relative" }}>
             <input
@@ -406,43 +576,77 @@ export default function App() {
       {selectedIso3 && selectedEntry && (
         <div style={{
           ...panelStyle,
-          top: disclaimerDismissed ? 56 : 94, right: 10, maxWidth: 270,
+          top: disclaimerDismissed ? 56 : 94, right: 10,
+          maxWidth: panelWidth ?? 270,
           maxHeight: "calc(100% - 210px)", overflowY: "auto",
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6, marginBottom: 6 }}>
             <div style={{ fontSize: 14, fontWeight: 700, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {flagEmoji(selectedIso3)} {countryName(selectedIso3, selectedEntry.name, lang)}
+              {compareMode && (
+                <>
+                  <span style={{ color: "#9ca3af", fontWeight: 400, margin: "0 4px" }}>vs</span>
+                  {compareIso3 && compareEntry
+                    ? <span style={{ color: "#f59e0b" }}>{flagEmoji(compareIso3)} {countryName(compareIso3, compareEntry.name, lang)}</span>
+                    : <span style={{ color: "#9ca3af", fontWeight: 400 }}>…</span>}
+                </>
+              )}
             </div>
-            <button
-              onClick={() => setSelectedIso3(null)}
-              title={t("app.close")}
-              aria-label={t("app.close")}
-              style={iconBtnStyle}
-            >
-              ✕
-            </button>
+            <div style={{ display: "flex", gap: 4, alignItems: "center", flexShrink: 0 }}>
+              {compareMode && compareIso3 && (
+                <button onClick={swapCompare} title={t("app.compare.swap")} aria-label={t("app.compare.swap")} style={iconBtnStyle}>↕</button>
+              )}
+              {compareMode ? (
+                <button onClick={stopCompare} title={t("app.close")} aria-label={t("app.close")} style={iconBtnStyle}>✕</button>
+              ) : (
+                <>
+                  <button onClick={startCompare} title={t("app.compare.start")} aria-label={t("app.compare.start")} style={iconBtnStyle}>➕</button>
+                  <button onClick={() => setSelectedIso3(null)} title={t("app.close")} aria-label={t("app.close")} style={iconBtnStyle}>✕</button>
+                </>
+              )}
+            </div>
           </div>
+          {compareMode && !compareIso3 && (
+            <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 6, background: "#f3f4f6", borderRadius: 6, padding: "6px 8px" }}>
+              {t("app.compare.hint")}
+            </div>
+          )}
           {selectedData && selectedRank !== undefined && (
-            <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 6 }}>
-              {t("app.detail.rank", {
+            <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 6, display: "flex", justifyContent: "space-between", gap: 8 }}>
+              <span>{t("app.detail.rank", {
                 rank: String(selectedRank),
                 total: String(selectedRankTotal),
                 ind: labelOf(indicatorA, "shortKey"),
-              })}
+              })}</span>
+              {compareMode && compareIso3 && (
+                <span style={{ color: "#f59e0b", fontWeight: 600 }}>
+                  #{rankSrc[indicatorA]?.[compareIso3] ?? "—"}
+                </span>
+              )}
             </div>
           )}
           {ALL_INDICATORS.map((ind) => {
-            const v = selectedData?.[ind.key];
-            const y = selectedData?.[`${ind.key}_year`];
-            const r = selectedIso3 ? rankOf[ind.key]?.[selectedIso3] : undefined;
+            const vA = valueAtYear(selectedIso3, ind.key) ?? selectedData?.[ind.key];
+            const yA = yearOf(selectedIso3, ind.key);
+            const vB = compareIso3 ? (valueAtYear(compareIso3, ind.key) ?? compareData?.[ind.key]) : undefined;
+            const yB = compareIso3 ? yearOf(compareIso3, ind.key) : undefined;
+            const rA = selectedIso3 ? rankSrc[ind.key]?.[selectedIso3] : undefined;
+            const rB = compareIso3 ? rankSrc[ind.key]?.[compareIso3] : undefined;
             return (
               <div key={ind.key} style={{ display: "flex", justifyContent: "space-between", gap: 8, fontSize: 12, padding: "3px 0", borderBottom: "1px solid #f3f4f6" }}>
-                <span style={{ color: "#4b5563" }}>{t(ind.labelKey)}</span>
-                <span style={{ fontWeight: 600, whiteSpace: "nowrap" }}>
-                  {typeof v === "number" ? fmt(v) : "—"}
-                  {typeof y === "string" ? ` (${y})` : ""}
-                  {r ? <span style={{ color: "#9ca3af", fontWeight: 400 }}> · #{r}</span> : null}
+                <span style={{ color: "#4b5563", flex: 1 }}>{t(ind.labelKey)}</span>
+                <span style={{ fontWeight: 600, whiteSpace: "nowrap", color: compareMode ? "#2563eb" : undefined, textAlign: "right" }}>
+                  {typeof vA === "number" ? fmt(vA) : "—"}
+                  {typeof yA === "string" ? ` (${yA})` : ""}
+                  {rA ? <span style={{ color: "#9ca3af", fontWeight: 400 }}> · #{rA}</span> : null}
                 </span>
+                {compareMode && compareIso3 && (
+                  <span style={{ fontWeight: 600, whiteSpace: "nowrap", color: "#f59e0b", textAlign: "right" }}>
+                    {typeof vB === "number" ? fmt(vB) : "—"}
+                    {typeof yB === "string" ? ` (${yB})` : ""}
+                    {rB ? <span style={{ color: "#9ca3af", fontWeight: 400 }}> · #{rB}</span> : null}
+                  </span>
+                )}
               </div>
             );
           })}
@@ -451,7 +655,7 @@ export default function App() {
 
       {/* Scatter panel — bottom left */}
       {panels.scatter ? (
-        <div style={{ ...panelStyle, bottom: 10, left: 10 }}>
+        <div style={{ ...panelStyle, bottom: 10, left: 10, maxWidth: panelWidth }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6, marginBottom: 6 }}>
             <div style={{ fontSize: 11, fontWeight: 600, color: "#666", textTransform: "uppercase" }}>
               {t("app.scatter.title", {

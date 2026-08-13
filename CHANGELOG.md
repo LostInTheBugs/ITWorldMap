@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026.08.006 (2026-08-13)
+
+### Added
+- **Sélecteur d'année** (séries temporelles) : checkbox « Années fixes » → slider 1960-2025, carte/légende/quantiles/rangs/tooltips/fiche recolorés sur l'année (N/A si absentes), partageable en URL (`?year=`)
+- **Comparaison de 2 pays** : bouton ➕ dans la fiche → 2ᵉ pays par clic ou recherche, tableau côte à côte (valeur/année/rang), échange ↕, highlight orange, `?c=FRA&compare=DEU`
+- **Mode mobile** : panneaux en pleine largeur (≤ viewport), panneau de contrôle scrollable (55vh)
+- Nouvel ETL `data/scripts/fetch_series.py` → `public/series.json` (8 indicateurs × 214 pays × 1960-2025, chargé à la demande, cache nginx 7 j)
+
+### Fixed
+- Fermeture propre du fichier series.json (cache mémoïsé + réessai en cas d'échec réseau)
+
+### Changed
+- Rangs de la fiche recalculés sur l'année sélectionnée (cohérence avec la carte)
+
 ## 2026.08.004 (2026-08-12)
 
 ### Added

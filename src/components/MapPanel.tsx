@@ -8,6 +8,7 @@ import ColorLegend from "./ColorLegend";
 import type { CountryData } from "../data/types";
 import type { MapFocus } from "./Map";
 import { fmt } from "../utils/format";
+import { seriesValue, type YearSeries } from "../utils/series";
 
 interface Props {
   data: CountryData[];
@@ -21,10 +22,13 @@ interface Props {
   resetToken?: number;
   focus?: MapFocus | null;
   selectedIso3?: string | null;
+  compareIso3?: string | null;
   onSelectCountry?: (iso3: string) => void;
   indicatorKey?: string;
   secondaryKey?: string;
   secondaryLabel?: string;
+  year?: number | null;
+  series?: YearSeries | null;
   t: (key: string, vars?: Record<string, string>) => string;
 }
 
@@ -114,7 +118,8 @@ function SyncController({ syncGroup }: { syncGroup?: React.MutableRefObject<L.Ma
 
 export default function MapPanel({
   data, label, valueFn, yearFn, showCables, geoData, syncGroup, showZoomControl = true,
-  resetToken = 0, focus, selectedIso3, onSelectCountry, indicatorKey, secondaryKey, secondaryLabel, t,
+  resetToken = 0, focus, selectedIso3, compareIso3, onSelectCountry, indicatorKey, secondaryKey, secondaryLabel,
+  year, series, t,
 }: Props) {
   const valueMap = useMemo(() => {
     const map: Record<string, number> = {};
@@ -138,6 +143,13 @@ export default function MapPanel({
   const secondaryMap = useMemo(() => {
     const map: Record<string, { v: number; y?: string }> = {};
     if (!secondaryKey) return map;
+    if (year != null && series) {
+      for (const d of data) {
+        const v = seriesValue(series, secondaryKey, d.iso3, year);
+        if (v !== undefined) map[d.iso3] = { v, y: String(year) };
+      }
+      return map;
+    }
     data.forEach((d) => {
       const v = d[secondaryKey];
       if (typeof v === "number" && isFinite(v)) {
@@ -146,7 +158,7 @@ export default function MapPanel({
       }
     });
     return map;
-  }, [data, secondaryKey]);
+  }, [data, secondaryKey, year, series]);
 
   const values = useMemo(() => Object.values(valueMap).sort((a, b) => a - b), [valueMap]);
 
@@ -170,15 +182,16 @@ export default function MapPanel({
     const props = (feature as { properties?: Record<string, unknown> })?.properties;
     const iso3 = getIso3(props);
     const value = iso3 ? valueMap[iso3] : undefined;
-    const selected = iso3 !== undefined && iso3 === selectedIso3;
+    const isSel = iso3 !== undefined && iso3 === selectedIso3;
+    const isCmp = iso3 !== undefined && iso3 === compareIso3;
     return {
       fillColor: value !== undefined ? getQuantileColor(value, thresholds) : "#d4d4d4",
-      weight: selected ? 3 : 1,
+      weight: isSel || isCmp ? 3 : 1,
       opacity: 1,
-      color: selected ? "#2563eb" : "#cccccc",
+      color: isSel ? "#2563eb" : isCmp ? "#f59e0b" : "#cccccc",
       fillOpacity: 0.85,
     };
-  }, [valueMap, thresholds, selectedIso3]);
+  }, [valueMap, thresholds, selectedIso3, compareIso3]);
 
   const onEachFeature = useCallback((feature: unknown, layer: L.Layer) => {
     const props = (feature as { properties?: Record<string, unknown> })?.properties;

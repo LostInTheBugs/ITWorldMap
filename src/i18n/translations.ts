@@ -26,6 +26,14 @@ export const translations: Record<Lang, Record<string, string>> = {
     "app.search.placeholder": "Rechercher un pays…",
     "app.close": "Fermer",
     "app.detail.rank": "🏆 Rang mondial : #{rank}/{total} · {ind}",
+    "app.year.toggle": "📅 Années fixes",
+    "app.year.label": "Année",
+    "app.year.loading": "Chargement des données historiques…",
+    "app.year.error": "Impossible de charger les données historiques",
+    "app.year.hint": "Valeurs de l'année sélectionnée pour {ind} (N/A si absentes).",
+    "app.compare.start": "Comparer avec un autre pays",
+    "app.compare.swap": "Échanger les deux pays",
+    "app.compare.hint": "Sélectionnez un 2ᵉ pays (clic sur la carte ou recherche).",
 
     // Disclaimer
     "disclaimer.text": "⚠️ Cette application est une démo/test. Les données peuvent contenir des erreurs ou des valeurs obsolètes. Ne pas utiliser à des fins de décision.",
@@ -91,6 +99,14 @@ export const translations: Record<Lang, Record<string, string>> = {
     "app.search.placeholder": "Search a country…",
     "app.close": "Close",
     "app.detail.rank": "🏆 World rank: #{rank}/{total} · {ind}",
+    "app.year.toggle": "📅 Fixed years",
+    "app.year.label": "Year",
+    "app.year.loading": "Loading historical data…",
+    "app.year.error": "Unable to load historical data",
+    "app.year.hint": "Values of the selected year for {ind} (N/A if missing).",
+    "app.compare.start": "Compare with another country",
+    "app.compare.swap": "Swap both countries",
+    "app.compare.hint": "Select a 2nd country (click map or search).",
 
     // Disclaimer
     "disclaimer.text": "⚠️ This application is a demo/test. Data may contain errors or outdated values. Do not use for decision-making purposes.",

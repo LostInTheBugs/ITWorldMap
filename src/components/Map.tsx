@@ -4,6 +4,7 @@ import type L from "leaflet";
 import MapPanel from "./MapPanel";
 import type { CountryData } from "../data/types";
 import type { CountryEntry } from "../utils/countries";
+import { seriesValue, type YearSeries } from "../utils/series";
 
 export type MapMode = "single" | "dual" | "ratio";
 
@@ -30,12 +31,16 @@ interface Props {
   onIndexReady?: (index: Record<string, CountryEntry>) => void;
   secondaryKey?: string;
   secondaryLabel?: string;
+  year?: number | null;
+  series?: YearSeries | null;
+  compareIso3?: string | null;
   t: (key: string, vars?: Record<string, string>) => string;
 }
 
 export default function Map({
   data, indicatorA, labelA, shortA, indicatorB, labelB, shortB, showCables, mode,
-  resetToken, focus, selectedIso3, onSelectCountry, onIndexReady, secondaryKey, secondaryLabel, t,
+  resetToken, focus, selectedIso3, onSelectCountry, onIndexReady, secondaryKey, secondaryLabel,
+  year, series, compareIso3, t,
 }: Props) {
   const [geoData, setGeoData] = useState<GeoJSON.GeoJsonObject | null>(null);
   const [geoError, setGeoError] = useState(false);
@@ -75,31 +80,58 @@ export default function Map({
   }, [geoData, onIndexReady]);
 
   const valueA = useMemo(() => (d: CountryData) => {
+    if (year != null && series) {
+      const s = seriesValue(series, indicatorA, d.iso3, year);
+      if (s !== undefined) return s;
+      return undefined;
+    }
     const v = d[indicatorA];
     return typeof v === "number" ? v : undefined;
-  }, [indicatorA]);
+  }, [indicatorA, year, series]);
 
   const valueB = useMemo(() => (d: CountryData) => {
+    if (year != null && series) {
+      const s = seriesValue(series, indicatorB, d.iso3, year);
+      if (s !== undefined) return s;
+      return undefined;
+    }
     const v = d[indicatorB];
     return typeof v === "number" ? v : undefined;
-  }, [indicatorB]);
+  }, [indicatorB, year, series]);
 
   const valueRatio = useMemo(() => (d: CountryData) => {
-    const a = d[indicatorA];
-    const b = d[indicatorB];
-    if (typeof a === "number" && typeof b === "number" && b !== 0) return a / b;
+    let a: number | undefined;
+    let b: number | undefined;
+    if (year != null && series) {
+      a = seriesValue(series, indicatorA, d.iso3, year);
+      b = seriesValue(series, indicatorB, d.iso3, year);
+    } else {
+      const av = d[indicatorA];
+      const bv = d[indicatorB];
+      a = typeof av === "number" ? av : undefined;
+      b = typeof bv === "number" ? bv : undefined;
+    }
+    if (a !== undefined && b !== undefined && b !== 0) return a / b;
     return undefined;
-  }, [indicatorA, indicatorB]);
+  }, [indicatorA, indicatorB, year, series]);
 
   const yearA = useMemo(() => (d: CountryData) => {
+    if (year != null && series) {
+      const s = seriesValue(series, indicatorA, d.iso3, year);
+      return s !== undefined ? String(year) : undefined;
+    }
     const y = d[`${indicatorA}_year`];
     return typeof y === "string" ? y : undefined;
-  }, [indicatorA]);
+  }, [indicatorA, year, series]);
 
   const yearB = useMemo(() => (d: CountryData) => {
+    if (year != null && series) {
+      const s = seriesValue(series, indicatorB, d.iso3, year);
+      return s !== undefined ? String(year) : undefined;
+    }
     const y = d[`${indicatorB}_year`];
     return typeof y === "string" ? y : undefined;
-  }, [indicatorB]);
+  }, [indicatorB, year, series]);
 
   if (geoError) {
     return (
@@ -121,9 +153,12 @@ export default function Map({
     resetToken,
     focus,
     selectedIso3,
+    compareIso3,
     onSelectCountry,
     secondaryKey,
     secondaryLabel,
+    year,
+    series,
     t,
   };
 
