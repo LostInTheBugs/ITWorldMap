@@ -39,13 +39,14 @@ interface Props {
   scaleMode?: ScaleMode;
   customThresholds?: string;
   compareIso3?: string | null;
+  isMobile?: boolean;
   t: (key: string, vars?: Record<string, string>) => string;
 }
 
 export default function Map({
   data, indicatorA, labelA, shortA, indicatorB, labelB, shortB, showCables, mode,
   resetToken, focus, selectedIso3, onSelectCountry, onIndexReady, secondaryKey, secondaryLabel,
-  year, yearB, series, scaleMode, customThresholds, compareIso3, t,
+  year, yearB, series, scaleMode, customThresholds, compareIso3, isMobile = false, t,
 }: Props) {
   const [geoData, setGeoData] = useState<GeoJSON.GeoJsonObject | null>(null);
   const [geoError, setGeoError] = useState(false);
@@ -200,7 +201,7 @@ export default function Map({
 
   return (
     <>
-      <div style={{ position: "fixed", inset: 0, display: "flex" }}>
+      <div style={{ position: "fixed", inset: 0, display: "flex", flexDirection: isMobile ? "column" : "row" }}>
         <div style={{ flex: 1, position: "relative" }}>
           <MapPanel
             {...panelProps}
@@ -212,7 +213,7 @@ export default function Map({
           />
         </div>
         {dual && (
-          <div style={{ flex: 1, position: "relative", borderLeft: "3px solid #fff" }}>
+          <div style={{ flex: 1, position: "relative", borderTop: isMobile ? "3px solid #fff" : "none", borderLeft: isMobile ? "none" : "3px solid #fff" }}>
             <MapPanel
               {...panelProps}
               label={labelB}

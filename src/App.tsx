@@ -394,6 +394,7 @@ export default function App() {
         series={series}
         scaleMode={scaleMode}
         customThresholds={scaleMode === "custom" ? customScale : ""}
+        isMobile={isMobile}
         t={t}
       />
 
@@ -689,13 +690,14 @@ export default function App() {
         </button>
       )}
 
-      {/* Country detail panel — top right */}
+      {/* Country detail panel — top right (desktop) / bottom sheet (mobile) */}
       {selectedIso3 && selectedEntry && (
         <div style={{
           ...panelStyle,
-          top: disclaimerDismissed ? 56 : 94, right: 10,
-          maxWidth: panelWidth ?? 270,
-          maxHeight: "calc(100% - 210px)", overflowY: "auto",
+          ...(isMobile
+            ? { bottom: 0, left: 0, right: 0, top: "auto", maxWidth: "100%", maxHeight: "42vh", borderRadius: "12px 12px 0 0" }
+            : { top: disclaimerDismissed ? 56 : 94, right: 10, maxWidth: panelWidth ?? 270, maxHeight: "calc(100% - 210px)" }),
+          overflowY: "auto",
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6, marginBottom: 6 }}>
             <div style={{ fontSize: 14, fontWeight: 700, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>

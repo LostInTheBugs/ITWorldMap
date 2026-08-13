@@ -22,7 +22,7 @@ Interactive world map visualizing IT indicators (Internet, mobile, broadband, se
 - 🎨 **Color scale modes** — quantiles (auto), equal classes, per-indicator fixed values, mean/median-centered, **custom thresholds** (`?scale=&custom=`)
 - 📅 **Year slider** (1960-2025): full re-color of map, legend, ranks and tooltips on the selected year — **per-map year in dual mode** (`?year=&yearB=`) + **▶ play button** (auto-scroll animation, synced in dual, **0.5×–4× speed**)
 - 📊 **Interactive scatter** — click a point to select a country
-- 📱 **Mobile-friendly panels** (full-width, scrollable control panel)
+- 📱 **Mobile & PWA** — stacked dual maps, country sheet from the bottom, **installable & offline** (service worker + manifest)
 - 🖱️ Country tooltips with value, data year, world rank and GDP/capita
 - 🌐 Reset view button, collapsible panels (persisted)
 - 🌍 FR/EN internationalization

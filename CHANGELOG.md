@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026.08.016 (2026-08-13)
+
+### Added
+- **Mobile** : mode dual empilé verticalement sur téléphone (2 cartes pleine largeur au lieu de côte à côte) ; fiche pays en **bottom-sheet** (panneau glissant du bas, coins arrondis, 42vh max, scrollable).
+- **PWA** (`vite-plugin-pwa`) : manifest + service worker → site **installable** sur l'écran d'accueil (plein écran, icône globe), **hors-ligne** (index, assets, geojson, series.json, câbles en cache ; tuiles OSM en cache borné 30 j/800), mise à jour auto du service worker. Icônes 192/512 + maskable générées.
+
 ## 2026.08.014 (2026-08-13)
 
 ### Added
