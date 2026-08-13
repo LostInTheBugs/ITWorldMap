@@ -117,6 +117,10 @@ export default function App() {
     const y = initialParams.get("yearB");
     return y !== null && /^\d{4}$/.test(y) ? Number(y) : null;
   });
+  // Lecture automatique de l'évolution des années
+  const [playing, setPlaying] = useState(false);
+  const yearRef = useRef(year);
+  yearRef.current = year;
 
   const loadSeries = useCallback(() => {
     if (series || seriesError) return;
@@ -128,7 +132,23 @@ export default function App() {
     if (yearMode && !series && !seriesError) loadSeries();
   }, [yearMode, series, seriesError, loadSeries]);
 
+  // Lecture automatique : avance d'une année tous les 600 ms jusqu'à la fin
   const yearRange = useMemo(() => seriesYearRange(series), [series]);
+
+  useEffect(() => {
+    if (!playing || !yearMode || !series || !yearRange) return;
+    const id = setInterval(() => {
+      const cur = yearRef.current ?? yearRange[1];
+      const next = cur + 1;
+      if (next > yearRange[1]) {
+        setPlaying(false);
+        return;
+      }
+      setYear(next);
+      setYearB((b) => (b == null ? b : Math.min(b + 1, yearRange[1])));
+    }, 600);
+    return () => clearInterval(id);
+  }, [playing, yearMode, series, yearRange]);
 
   // Dernière année avec données pour l'indicateur actif (défaut du slider)
   const defaultYear = useMemo(() => {
@@ -498,6 +518,7 @@ export default function App() {
               onChange={(e) => {
                 const on = e.target.checked;
                 setYearMode(on);
+                if (!on) setPlaying(false);
                 if (on) {
                   loadSeries();
                   setYear((cur) => cur ?? defaultYear ?? yearRange?.[1] ?? 2023);
@@ -514,7 +535,27 @@ export default function App() {
                 <>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#6b7280", marginBottom: 2 }}>
                     <span>{t("app.year.label")}</span>
-                    <span style={{ fontWeight: 700, color: "#2563eb" }}>{year ?? yearRange[1]}</span>
+                    <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <button
+                        onClick={() => setPlaying((p) => !p)}
+                        title={playing ? t("app.year.pause") : t("app.year.play")}
+                        aria-label={playing ? t("app.year.pause") : t("app.year.play")}
+                        style={{
+                          background: playing ? "#f59e0b" : "#2563eb",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: 4,
+                          width: 22,
+                          height: 20,
+                          fontSize: 11,
+                          cursor: "pointer",
+                          lineHeight: 1,
+                        }}
+                      >
+                        {playing ? "⏸" : "▶"}
+                      </button>
+                      <span style={{ fontWeight: 700, color: "#2563eb" }}>{year ?? yearRange[1]}</span>
+                    </span>
                   </div>
                   <input
                     type="range"

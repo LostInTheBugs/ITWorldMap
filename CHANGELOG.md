@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026.08.010 (2026-08-13)
+
+### Added
+- **Lecture automatique des années (bouton ▶/⏸)** : animation de l'évolution année par année (600 ms/an) jusqu'à la dernière année disponible, à côté du slider « Année ». En mode dual, les deux cartes défilent en synchronisation. Arrêt automatique en fin de plage ou à la désactivation du mode années fixes. URL partageable à tout instant (`?year=`).
+
 ## 2026.08.008 (2026-08-13)
 
 ### Added
