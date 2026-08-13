@@ -118,6 +118,11 @@ export default function App() {
     fetchSeries().then(setSeries).catch(() => setSeriesError(true));
   }, [series, seriesError]);
 
+  // Charge les séries au montage si le mode année est actif (ex: ?year= dans l'URL)
+  useEffect(() => {
+    if (yearMode && !series && !seriesError) loadSeries();
+  }, [yearMode, series, seriesError, loadSeries]);
+
   const yearRange = useMemo(() => seriesYearRange(series), [series]);
 
   // Dernière année avec données pour l'indicateur actif (défaut du slider)

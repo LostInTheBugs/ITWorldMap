@@ -14,6 +14,9 @@
 ### Changed
 - Rangs de la fiche recalculés sur l'année sélectionnée (cohérence avec la carte)
 
+### Hotfix 2026.08.006-c1
+- Mode années fixes via `?year=` au chargement : les séries n'étaient jamais chargées (loadSeries uniquement déclenché par le toggle) → « Chargement des données historiques… » infini. Ajout d'un `useEffect` qui charge les séries au montage quand `yearMode` est actif.
+
 ## 2026.08.004 (2026-08-12)
 
 ### Added
