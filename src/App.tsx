@@ -119,6 +119,7 @@ export default function App() {
   });
   // Lecture automatique de l'évolution des années
   const [playing, setPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1); // multiplicateur : 0.5× = 2× plus lent
   const yearRef = useRef(year);
   yearRef.current = year;
 
@@ -146,9 +147,9 @@ export default function App() {
       }
       setYear(next);
       setYearB((b) => (b == null ? b : Math.min(b + 1, yearRange[1])));
-    }, 600);
+    }, 600 / speed);
     return () => clearInterval(id);
-  }, [playing, yearMode, series, yearRange]);
+  }, [playing, yearMode, series, yearRange, speed]);
 
   // Dernière année avec données pour l'indicateur actif (défaut du slider)
   const defaultYear = useMemo(() => {
@@ -536,6 +537,17 @@ export default function App() {
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#6b7280", marginBottom: 2 }}>
                     <span>{t("app.year.label")}</span>
                     <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <select
+                        value={speed}
+                        onChange={(e) => setSpeed(Number(e.target.value))}
+                        aria-label={t("app.year.speed")}
+                        style={{ fontSize: 10, border: "1px solid #d1d5db", borderRadius: 4, background: "#fff", padding: "1px 2px", width: 48, color: "#374151" }}
+                      >
+                        <option value={0.5}>0.5×</option>
+                        <option value={1}>1×</option>
+                        <option value={2}>2×</option>
+                        <option value={4}>4×</option>
+                      </select>
                       <button
                         onClick={() => setPlaying((p) => !p)}
                         title={playing ? t("app.year.pause") : t("app.year.play")}

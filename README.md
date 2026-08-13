@@ -19,7 +19,7 @@ Interactive world map visualizing IT indicators (Internet, mobile, broadband, se
 - 🔍 **Country search** (FR/EN autocomplete, flags) with animated fly-to and selection highlight
 - 📋 **Country detail panel** on click: flag, localized name, world rank, all 8 indicators with value/year/rank
 - ⚔️ **2-country comparison** (side-by-side table, swap, orange highlight)
-- 📅 **Year slider** (1960-2025): full re-color of map, legend, ranks and tooltips on the selected year — **per-map year in dual mode** (`?year=&yearB=`) + **▶ play button** (auto-scroll animation, synced in dual)
+- 📅 **Year slider** (1960-2025): full re-color of map, legend, ranks and tooltips on the selected year — **per-map year in dual mode** (`?year=&yearB=`) + **▶ play button** (auto-scroll animation, synced in dual, **0.5×–4× speed**)
 - 📊 **Interactive scatter** — click a point to select a country
 - 📱 **Mobile-friendly panels** (full-width, scrollable control panel)
 - 🖱️ Country tooltips with value, data year, world rank and GDP/capita

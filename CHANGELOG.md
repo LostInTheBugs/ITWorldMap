@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026.08.012 (2026-08-13)
+
+### Added
+- **Vitesse de lecture réglable** : sélecteur 0.5×/1×/2×/4× à côté du bouton ▶, modifiable pendant la lecture (300 ms à 1,2 s par année).
+
 ## 2026.08.010 (2026-08-13)
 
 ### Added
