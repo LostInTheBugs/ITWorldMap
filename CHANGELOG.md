@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026.08.014 (2026-08-13)
+
+### Added
+- **Modes d'échelle de la légende** (sélecteur « Échelle » dans le panneau) : quantiles (auto), classes égales, valeurs fixes par indicateur, moyenne au centre, médiane au centre, personnalisé (seuils saisis par l'utilisateur). Partageable en URL (`?scale=` + `?custom=`). En mode « années fixes », les modes fixes/personnalisé gardent la légende stable pendant la lecture automatique.
+- Nouveau module `src/utils/scale.ts` (seuils partagés carte + légende).
+
+### Fixed
+- **Crash de l'application** quand le mode personnalisé recevait moins de 5 seuils (lecture hors bornes dans la légende → React démontait l'interface). La légende et la colorisation s'adaptent au nombre de seuils saisis.
+
 ## 2026.08.012 (2026-08-13)
 
 ### Added

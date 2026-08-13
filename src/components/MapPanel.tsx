@@ -9,6 +9,7 @@ import type { CountryData } from "../data/types";
 import type { MapFocus } from "./Map";
 import { fmt } from "../utils/format";
 import { seriesValue, type YearSeries } from "../utils/series";
+import { computeThresholds, FIXED_THRESHOLDS, type ScaleMode } from "../utils/scale";
 
 interface Props {
   data: CountryData[];
@@ -29,6 +30,8 @@ interface Props {
   secondaryLabel?: string;
   year?: number | null;
   series?: YearSeries | null;
+  scaleMode?: ScaleMode;
+  customThresholds?: string;
   t: (key: string, vars?: Record<string, string>) => string;
 }
 
@@ -53,7 +56,7 @@ function getIso3(props: Record<string, unknown> | undefined): string | undefined
 
 function getQuantileColor(value: number, thresholds: number[]): string {
   for (let i = 0; i < thresholds.length; i++) if (value <= thresholds[i]) return PALETTE[i];
-  return PALETTE[PALETTE.length - 1];
+  return PALETTE[thresholds.length] ?? PALETTE[PALETTE.length - 1];
 }
 
 function escapeHtml(s: string): string {
@@ -119,7 +122,7 @@ function SyncController({ syncGroup }: { syncGroup?: React.MutableRefObject<L.Ma
 export default function MapPanel({
   data, label, valueFn, yearFn, showCables, geoData, syncGroup, showZoomControl = true,
   resetToken = 0, focus, selectedIso3, compareIso3, onSelectCountry, indicatorKey, secondaryKey, secondaryLabel,
-  year, series, t,
+  year, series, scaleMode = "quantiles", customThresholds = "", t,
 }: Props) {
   const valueMap = useMemo(() => {
     const map: Record<string, number> = {};
@@ -172,11 +175,8 @@ export default function MapPanel({
 
   const thresholds = useMemo(() => {
     if (values.length === 0) return [0, 0, 0, 0, 0];
-    const n = PALETTE.length;
-    const t: number[] = [];
-    for (let i = 1; i < n; i++) t.push(values[Math.floor((values.length * i) / n)] ?? values[values.length - 1]);
-    return t;
-  }, [values]);
+    return computeThresholds(values, scaleMode, customThresholds, indicatorKey ? FIXED_THRESHOLDS[indicatorKey] : undefined);
+  }, [values, scaleMode, customThresholds, indicatorKey]);
 
   const style = useCallback((feature: unknown): PathOptions => {
     const props = (feature as { properties?: Record<string, unknown> })?.properties;
@@ -233,7 +233,7 @@ export default function MapPanel({
         )}
         <CableLayer visible={showCables} />
       </MapContainer>
-      <ColorLegend palette={PALETTE} thresholds={thresholds} values={values} title={label} t={t} />
+      <ColorLegend palette={PALETTE} thresholds={thresholds} values={values} title={label} modeLabel={t(`map.legend.mode.${scaleMode}`)} t={t} />
     </div>
   );
 }

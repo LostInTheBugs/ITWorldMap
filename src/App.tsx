@@ -7,7 +7,8 @@ import type { CountryData } from "./data/types";
 import { useLang } from "./i18n/LangContext";
 import { countryName, flagEmoji, type CountryEntry } from "./utils/countries";
 import { fmt } from "./utils/format";
-import { fetchSeries, seriesYearRange, seriesValue, type YearSeries } from "./utils/series";
+import { fetchSeries, seriesValue, seriesYearRange, type YearSeries } from "./utils/series";
+import type { ScaleMode } from "./utils/scale";
 import { useMediaQuery } from "./hooks/useMediaQuery";
 
 const indicatorsData = indicatorsRaw as CountryData[];
@@ -122,6 +123,12 @@ export default function App() {
   const [speed, setSpeed] = useState(1); // multiplicateur : 0.5× = 2× plus lent
   const yearRef = useRef(year);
   yearRef.current = year;
+  // Mode d'échelle de la légende (quantiles / égales / fixes / moyenne / médiane / personnalisé)
+  const [scaleMode, setScaleMode] = useState<ScaleMode>(() => {
+    const s = initialParams.get("scale");
+    return s === "equal" || s === "fixed" || s === "mean" || s === "median" || s === "custom" ? s : "quantiles";
+  });
+  const [customScale, setCustomScale] = useState(() => initialParams.get("custom") ?? "");
 
   const loadSeries = useCallback(() => {
     if (series || seriesError) return;
@@ -211,9 +218,11 @@ export default function App() {
     if (compareIso3) p.set("compare", compareIso3);
     if (year != null) p.set("year", String(year));
     if (yearB != null && mode === "dual") p.set("yearB", String(yearB));
+    if (scaleMode !== "quantiles") p.set("scale", scaleMode);
+    if (scaleMode === "custom" && customScale.trim()) p.set("custom", customScale.trim());
     p.set("lang", lang);
     window.history.replaceState(null, "", `${window.location.pathname}?${p.toString()}`);
-  }, [mode, indicatorA, indicatorB, xAxis, yAxis, showCables, selectedIso3, compareIso3, year, yearB, lang]);
+  }, [mode, indicatorA, indicatorB, xAxis, yAxis, showCables, selectedIso3, compareIso3, year, yearB, scaleMode, customScale, lang]);
 
   // Année depuis ?year= (chargée une fois les séries dispo)
   useEffect(() => {
@@ -383,6 +392,8 @@ export default function App() {
         year={yearMode ? year : null}
         yearB={mode === "dual" && yearMode ? yearB : null}
         series={series}
+        scaleMode={scaleMode}
+        customThresholds={scaleMode === "custom" ? customScale : ""}
         t={t}
       />
 
@@ -599,6 +610,30 @@ export default function App() {
                     {t("app.year.hint", { ind: labelOf(indicatorA, "shortKey") })}
                   </div>
                 </>
+              )}
+              <div style={{ fontSize: 11, color: "#6b7280", marginTop: 10, marginBottom: 2 }}>{t("app.scale.label")}</div>
+              <select
+                value={scaleMode}
+                onChange={(e) => setScaleMode(e.target.value as ScaleMode)}
+                style={{ width: "100%", fontSize: 12, padding: "3px 4px", border: "1px solid #d1d5db", borderRadius: 4, background: "#fff", color: "#374151" }}
+                aria-label={t("app.scale.label")}
+              >
+                <option value="quantiles">📊 {t("app.scale.quantiles")}</option>
+                <option value="equal">📏 {t("app.scale.equal")}</option>
+                <option value="fixed">🎯 {t("app.scale.fixed")}</option>
+                <option value="mean">🧮 {t("app.scale.mean")}</option>
+                <option value="median">🧮 {t("app.scale.median")}</option>
+                <option value="custom">✏️ {t("app.scale.custom")}</option>
+              </select>
+              {scaleMode === "custom" && (
+                <input
+                  type="text"
+                  value={customScale}
+                  onChange={(e) => setCustomScale(e.target.value)}
+                  placeholder={t("app.scale.customPlaceholder")}
+                  aria-label={t("app.scale.customPlaceholder")}
+                  style={{ width: "100%", fontSize: 11, padding: "3px 4px", border: "1px solid #d1d5db", borderRadius: 4, marginTop: 4, color: "#374151" }}
+                />
               )}
             </div>
           )}

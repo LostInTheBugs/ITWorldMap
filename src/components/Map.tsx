@@ -5,6 +5,7 @@ import MapPanel from "./MapPanel";
 import type { CountryData } from "../data/types";
 import type { CountryEntry } from "../utils/countries";
 import { seriesValue, type YearSeries } from "../utils/series";
+import type { ScaleMode } from "../utils/scale";
 import centroids from "../data/centroids.json";
 
 export type MapMode = "single" | "dual" | "ratio";
@@ -35,6 +36,8 @@ interface Props {
   year?: number | null;
   yearB?: number | null;
   series?: YearSeries | null;
+  scaleMode?: ScaleMode;
+  customThresholds?: string;
   compareIso3?: string | null;
   t: (key: string, vars?: Record<string, string>) => string;
 }
@@ -42,7 +45,7 @@ interface Props {
 export default function Map({
   data, indicatorA, labelA, shortA, indicatorB, labelB, shortB, showCables, mode,
   resetToken, focus, selectedIso3, onSelectCountry, onIndexReady, secondaryKey, secondaryLabel,
-  year, yearB, series, compareIso3, t,
+  year, yearB, series, scaleMode, customThresholds, compareIso3, t,
 }: Props) {
   const [geoData, setGeoData] = useState<GeoJSON.GeoJsonObject | null>(null);
   const [geoError, setGeoError] = useState(false);
@@ -190,6 +193,8 @@ export default function Map({
     secondaryLabel,
     year,
     series,
+    scaleMode,
+    customThresholds,
     t,
   };
 

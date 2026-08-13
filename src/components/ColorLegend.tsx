@@ -5,11 +5,12 @@ interface Props {
   thresholds: number[];
   values: number[];
   title?: string;
+  modeLabel?: string;
   hasNoData?: boolean;
   t: (key: string) => string;
 }
 
-export default function ColorLegend({ palette, thresholds, values, title, hasNoData = true, t }: Props) {
+export default function ColorLegend({ palette, thresholds, values, title, modeLabel, hasNoData = true, t }: Props) {
   const min = values.length > 0 ? values[0] : 0;
   const max = values.length > 0 ? values[values.length - 1] : 1;
 
@@ -37,18 +38,18 @@ export default function ColorLegend({ palette, thresholds, values, title, hasNoD
           maxWidth: 200,
         }}
       >
-        {title ? title : t("map.legend.title")} <span style={{ fontWeight: 400 }}>{t("map.legend.quantiles")}</span>
+        {title ? title : t("map.legend.title")} <span style={{ fontWeight: 400 }}>{modeLabel ?? t("map.legend.quantiles")}</span>
       </div>
       <div style={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-        {palette.map((color, i) => {
+        {palette.slice(0, Math.max(1, thresholds.length + 1)).map((color, i) => {
           const lo = i === 0 ? min : thresholds[i - 1];
-          const hi = i === palette.length - 1 ? max : thresholds[i];
-          const rangeLabel = i === 0 ? `<${fmt(hi)}` : i === palette.length - 1 ? `>${fmt(lo)}` : `${fmt(lo)}–${fmt(hi)}`;
+          const hi = i === thresholds.length ? max : thresholds[i];
+          const rangeLabel = i === 0 ? `<${fmt(hi)}` : i === thresholds.length ? `>${fmt(lo)}` : `${fmt(lo)}–${fmt(hi)}`;
           return (
             <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center" }} title={rangeLabel}>
               <div style={{ width: 30, height: 14, borderRadius: 2, backgroundColor: color }} />
               <span style={{ fontSize: 9, color: "#6b7280", marginTop: 2, whiteSpace: "nowrap" }}>
-                {i === 0 ? `<${fmt(hi)}` : i === palette.length - 1 ? `>${fmt(lo)}` : fmt(lo)}
+                {i === 0 ? `<${fmt(hi)}` : i === thresholds.length ? `>${fmt(lo)}` : fmt(lo)}
               </span>
             </div>
           );

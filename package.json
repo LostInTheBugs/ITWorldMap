@@ -1,7 +1,7 @@
 {
   "name": "itworldmap",
   "private": true,
-  "version": "2026.08.012",
+  "version": "2026.08.014",
   "type": "module",
   "scripts": {
     "dev": "vite",
