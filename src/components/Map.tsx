@@ -201,7 +201,7 @@ export default function Map({
 
   return (
     <>
-      <div style={{ position: "fixed", inset: 0, display: "flex", flexDirection: isMobile ? "column" : "row" }}>
+      <div style={{ position: "fixed", inset: 0, display: "flex", flexDirection: isMobile ? "column" : "row" }} className="itwm-capture">
         <div style={{ flex: 1, position: "relative" }}>
           <MapPanel
             {...panelProps}

@@ -5,6 +5,7 @@ import ScatterPlot from "./components/ScatterPlot";
 import indicatorsRaw from "./data/indicators.json";
 import type { CountryData } from "./data/types";
 import { useLang } from "./i18n/LangContext";
+import html2canvas from "html2canvas";
 import { countryName, flagEmoji, type CountryEntry } from "./utils/countries";
 import { fmt } from "./utils/format";
 import { fetchSeries, seriesValue, seriesYearRange, type YearSeries } from "./utils/series";
@@ -369,6 +370,30 @@ export default function App() {
     return typeof y === "string" ? y : undefined;
   };
 
+  // Export PNG de la carte (html2canvas sur le conteneur .itwm-capture)
+  const [exporting, setExporting] = useState(false);
+  const doExport = async () => {
+    if (exporting) return;
+    setExporting(true);
+    try {
+      const el = document.querySelector(".itwm-capture");
+      if (el) {
+        const canvas = await html2canvas(el as HTMLElement, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          logging: false,
+        });
+        const a = document.createElement("a");
+        a.download = `itworldmap-${new Date().toISOString().slice(0, 10)}.png`;
+        a.href = canvas.toDataURL("image/png");
+        a.click();
+      }
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <>
       <Map
@@ -438,6 +463,14 @@ export default function App() {
                 style={iconBtnStyle}
               >
                 🌐
+              </button>
+              <button
+                onClick={doExport}
+                title={t("app.exportPng")}
+                aria-label={t("app.exportPng")}
+                style={{ ...iconBtnStyle, opacity: exporting ? 0.5 : 1 }}
+              >
+                {exporting ? "⏳" : "📷"}
               </button>
               <select
                 value={lang}

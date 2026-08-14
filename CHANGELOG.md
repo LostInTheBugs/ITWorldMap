@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026.08.018 (2026-08-14)
+
+### Added
+- **Popup câbles sous-marins** : clic sur un câble → nom + longueur géodésique (ex. « Pan-American Crossing — 6 653 km (approx.) »). Corrections d'empilement : pane Leaflet dédié (zIndex 500) pour que les câbles passent au-dessus des pays.
+- **Export PNG** : bouton 📷 dans l'en-tête → capture 2× de la carte (carte + légende, `itworldmap-YYYY-MM-DD.png`), fonctionne en modes single, dual et ratio.
+
 ## 2026.08.016 (2026-08-13)
 
 ### Added
