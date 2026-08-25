@@ -36,11 +36,11 @@
 ### Added
 - **Scatter interactif** : clic sur un point du graphique → sélection du pays (fiche + zoom + URL `?c=`), point sélectionné en bleu (orange en comparaison) avec liseré blanc, curseur pointer.
 - **Double année en mode dual** : second slider « Année (carte 2) » (orange) — chaque carte a sa propre année, partageable `?year=2000&yearB=2022`. Tooltips, rangs et couleurs cohérents par carte.
-- **ETL hebdo automatique** (cron dimanche 4h, VM Hermes) : refresh World Bank → `indicators.json` + `series.json` → build + commit/push + déploiement serveur-prod si données changées (silencieux sinon). Purge du cache `data/raw/` pour forcer un fetch frais.
-- **Watchdog serveur-prod** : alerte down/up du serveur et du site (5 min).
+- **ETL hebdo automatique** (cron dimanche 4h, VM Hermes) : refresh World Bank → `indicators.json` + `series.json` → build + commit/push + déploiement serveur prod si données changées (silencieux sinon). Purge du cache `data/raw/` pour forcer un fetch frais.
+- **Watchdog serveur prod** : alerte down/up du serveur et du site (5 min).
 
 ### Changed
-- Migration prod ancien-serveur → serveur-prod (Traefik docker + Let's Encrypt, DNS Cloudflare mis à jour). ancien-serveur nettoyé (conteneur, image, répertoire).
+- Migration prod (Traefik docker + Let's Encrypt, DNS Cloudflare mis à jour). Ancien serveur nettoyé (conteneur, image, répertoire).
 
 ### Added
 - **Sélecteur d'année** (séries temporelles) : checkbox « Années fixes » → slider 1960-2025, carte/légende/quantiles/rangs/tooltips/fiche recolorés sur l'année (N/A si absentes), partageable en URL (`?year=`)
